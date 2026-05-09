@@ -33,6 +33,7 @@ from .automation import run_safe_automation
 from .discord_bot import build_discord_reply
 from .agent_runtime import agent_status, enqueue_task, run_agent_loop, run_agent_once
 from .demo_executor import execute_latest_signal, execute_saved_plans
+from .trade_manager import manage_demo_positions
 
 
 def load_config(path: str) -> dict:
@@ -100,6 +101,7 @@ def command_run(args: argparse.Namespace) -> None:
         saved_count, saved_plans = save_plans_detail(journal, config, plans)
         emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
         print_execution_results(execute_saved_plans(config, saved_plans))
+        print_execution_results(manage_demo_positions(config))
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -145,6 +147,7 @@ def command_csv(args: argparse.Namespace) -> None:
         saved_count, saved_plans = save_plans_detail(journal, config, plans)
         emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
         print_execution_results(execute_saved_plans(config, saved_plans))
+        print_execution_results(manage_demo_positions(config))
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -423,6 +426,16 @@ def command_execution_dry_run(args: argparse.Namespace) -> None:
         print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+def command_execution_manage(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    results = manage_demo_positions(config)
+    if not results:
+        print("no managed positions or execution disabled")
+        return
+    for result in results:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+
+
 def command_execution_lock(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     print(set_daily_lock(config, args.reason))
@@ -663,6 +676,10 @@ def main() -> None:
     execution_dry_run_parser = sub.add_parser("execution-dry-run")
     execution_dry_run_parser.add_argument("--config", default="config.json")
     execution_dry_run_parser.set_defaults(func=command_execution_dry_run)
+
+    execution_manage_parser = sub.add_parser("execution-manage")
+    execution_manage_parser.add_argument("--config", default="config.json")
+    execution_manage_parser.set_defaults(func=command_execution_manage)
 
     execution_lock_parser = sub.add_parser("execution-lock")
     execution_lock_parser.add_argument("--config", default="config.json")

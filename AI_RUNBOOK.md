@@ -261,9 +261,15 @@ daily_max_loss_usd=5 for BTC
 duplicate seen file under guards/
 daily lock file under guards/
 Discord ops alert after execution/reject
+BTC order manager:
+- `mt5_planner/trade_manager.py`
+- runs from live loop and command `execution-manage`
+- manages only positions matching the configured symbol and magic number
+- at +1R, attempts partial close if volume allows, then moves SL to BE
+- with fixed lot 0.01, partial close usually skips and BE move is the main action
 ```
 
-Do not add any second order sender. Keep all order actions inside Vloc/demo_executor.
+Do not add any second order sender. Keep order sends inside Vloc/demo_executor and position management inside trade_manager.
 
 ## Multi-Model Future
 

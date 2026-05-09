@@ -7,6 +7,7 @@ import sqlite3
 
 from .execution import execution_guard_status
 from .alerts import send_discord_alert
+from .mt5_runtime import initialize_mt5
 
 
 def execute_saved_plans(config: dict, plans: list[dict]) -> list[dict]:
@@ -80,7 +81,6 @@ def execute_plan(config: dict, plan: dict) -> dict:
         return result
 
     if execution.get("dry_run", True):
-        mark_duplicate_seen(config, plan)
         result.update({"status": "dry_run", "reason": "validated; order not sent"})
         return result
 
@@ -134,10 +134,7 @@ def preflight(config: dict, plan: dict) -> tuple[bool, str]:
 
 
 def send_mt5_market_order(config: dict, plan: dict) -> dict:
-    import MetaTrader5 as mt5
-
-    if not mt5.initialize():
-        raise RuntimeError(f"MT5 initialize failed: {mt5.last_error()}")
+    mt5 = initialize_mt5(config)
 
     symbol = config["symbol"]
     if not mt5.symbol_select(symbol, True):
@@ -158,6 +155,10 @@ def send_mt5_market_order(config: dict, plan: dict) -> dict:
     tick = mt5.symbol_info_tick(symbol)
     if tick is None:
         raise RuntimeError(f"symbol_info_tick failed for {symbol}: {mt5.last_error()}")
+    spread = abs(float(tick.ask) - float(tick.bid))
+    max_spread = float(config.get("spread_filter", {}).get("max_spread_price") or 0)
+    if max_spread > 0 and spread > max_spread:
+        raise RuntimeError(f"spread guard: {spread:.3f} > {max_spread:.3f}")
 
     direction = str(plan.get("direction")).lower()
     order_type = mt5.ORDER_TYPE_BUY if direction == "long" else mt5.ORDER_TYPE_SELL
@@ -204,16 +205,25 @@ def current_daily_loss_usd(config: dict) -> float:
     today = datetime.now(timezone.utc).date().isoformat()
     with sqlite3.connect(path) as conn:
         conn.row_factory = sqlite3.Row
-        rows = conn.execute(
+        rows = [dict(row) for row in conn.execute(
             """
-            select actual_risk_usd
+            select
+                created_at, symbol, timeframe, mode, direction,
+                entry, stop_loss, take_profit, risk_reward,
+                quality_score, quality_label, session, spread, lot,
+                actual_risk_usd, idea_key, status, closed_at, close_price,
+                mfe, mae, source, payload
             from signals
-            where status = 'sl'
+            where coalesce(source, 'forward') = 'forward'
               and coalesce(closed_at, created_at) >= ?
+            order by id asc
             """,
             (today,),
-        ).fetchall()
-    return sum(float(row["actual_risk_usd"] or 0) for row in rows)
+        ).fetchall()]
+    from .forward_report import group_trade_ideas
+
+    ideas = group_trade_ideas(rows)
+    return sum(float(row.get("actual_risk_usd") or 0) for row in ideas if row.get("status") == "sl")
 
 
 def signal_key(config: dict, plan: dict) -> str:

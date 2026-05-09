@@ -75,7 +75,15 @@
       "problemMatcher": []
     },
     {
-      "label": "10 Gloc Resend Latest Signal",
+      "label": "10 Gloc Execution Manage",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "execution-manage"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "11 Gloc Resend Latest Signal",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "resend-latest"],
@@ -83,7 +91,7 @@
       "problemMatcher": []
     },
     {
-      "label": "11 Gloc Scheduler Status",
+      "label": "12 Gloc Scheduler Status",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\status_windows_tasks.ps1"],
@@ -91,7 +99,7 @@
       "problemMatcher": []
     },
     {
-      "label": "12 Gloc Install Scheduler",
+      "label": "13 Gloc Install Scheduler",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\install_windows_tasks.ps1"],
@@ -99,7 +107,7 @@
       "problemMatcher": []
     },
     {
-      "label": "13 Gloc Uninstall Scheduler",
+      "label": "14 Gloc Uninstall Scheduler",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\uninstall_windows_tasks.ps1"],
@@ -107,7 +115,7 @@
       "problemMatcher": []
     },
     {
-      "label": "14 Gloc Startup Agents Status",
+      "label": "15 Gloc Startup Agents Status",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\status_startup_agents.ps1"],
@@ -115,7 +123,7 @@
       "problemMatcher": []
     },
     {
-      "label": "15 Gloc Install Startup Agents",
+      "label": "16 Gloc Install Startup Agents",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\install_startup_agents.ps1"],
@@ -123,7 +131,7 @@
       "problemMatcher": []
     },
     {
-      "label": "16 Gloc Uninstall Startup Agents",
+      "label": "17 Gloc Uninstall Startup Agents",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\uninstall_startup_agents.ps1"],
@@ -131,7 +139,7 @@
       "problemMatcher": []
     },
     {
-      "label": "17 Gloc Discord Bot Run",
+      "label": "18 Gloc Discord Bot Run",
       "type": "shell",
       "command": "powershell",
       "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\START_DISCORD_BOT.ps1"],

@@ -49,6 +49,9 @@ max_open_trades: 1
 daily_max_loss_usd: 5
 duplicate_guard: true
 emergency_stop: true
+manage_positions: true
+move_be_at_rr: 1.0
+partial_close_ratio: 0.5
 ```
 
 The executor checks:
@@ -60,6 +63,17 @@ The executor checks:
 - Lot size is valid.
 - Open position count is below the limit.
 - Discord ops alert is sent after sent/reject/error.
+
+## BTC Order Manager
+
+Vloc also manages BTC demo positions opened by Gloc's magic number.
+
+At `+1R`:
+
+- If volume is large enough, it attempts a partial close.
+- With fixed lot `0.01`, partial close is normally skipped because it is already the minimum lot.
+- It then moves SL to break-even.
+- Every action/reject/error is logged to `reports/manager.log` and sent to Discord ops.
 
 ## Current Forward Status
 
@@ -92,8 +106,9 @@ Use `Terminal > Run Task...`.
 06 Gloc Daily Summary All     daily summary
 07 Gloc Execution Status      confirm BTC/XAU execution state
 08 Gloc Execution Dry Run     validate latest BTC signal without order
-10 Gloc Resend Latest Signal  resend latest Discord signal
-17 Gloc Discord Bot Run       run Discord Q&A bot when token is configured
+10 Gloc Execution Manage      run BTC order manager once
+11 Gloc Resend Latest Signal  resend latest Discord signal
+18 Gloc Discord Bot Run       run Discord Q&A bot when token is configured
 ```
 
 ## Run By PowerShell
@@ -102,6 +117,7 @@ Use `Terminal > Run Task...`.
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action live
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action execution
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-dry-run
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-manage
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action report
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action safe-automation
 ```
@@ -201,4 +217,4 @@ XAUUSDm M5 -> xauusdm_m5.csv
 
 ## Development Rule
 
-Do not create a second execution path. Any future order, close, modify, TP1, or break-even action must go through Vloc / `mt5_planner/demo_executor.py`.
+Do not create a second execution path. Any future order send must go through Vloc / `mt5_planner/demo_executor.py`; any future close, modify, TP1, or break-even action must go through `mt5_planner/trade_manager.py`.

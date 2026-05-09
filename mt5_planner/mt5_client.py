@@ -1,5 +1,7 @@
 import pandas as pd
 
+from .mt5_runtime import initialize_mt5
+
 
 TIMEFRAMES = {
     "M1": "TIMEFRAME_M1",
@@ -17,11 +19,7 @@ class MT5Client:
         self.mt5 = None
 
     def connect(self) -> None:
-        import MetaTrader5 as mt5
-
-        if not mt5.initialize():
-            raise RuntimeError(f"MT5 initialize failed: {mt5.last_error()}")
-        self.mt5 = mt5
+        self.mt5 = initialize_mt5({})
 
     def get_rates(self, symbol: str, timeframe: str, bars: int) -> pd.DataFrame:
         if self.mt5 is None:

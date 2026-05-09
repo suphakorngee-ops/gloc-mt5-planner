@@ -11,8 +11,9 @@ Visible VSCode tasks are now simplified:
 04 Gloc Safe Automation       = report + daily + save-state + backup + Discord digest
 05 Gloc Report All            = forward progress report
 06 Gloc Daily Summary All     = daily summary files
-07 Gloc Execution Status      = confirm auto execution is OFF
-08 Gloc Dashboard Open        = build/open static dashboard
+07 Gloc Execution Status      = confirm BTC demo / XAU execution state
+08 Gloc Execution Dry Run     = validate latest BTC signal without order
+10 Gloc Execution Manage      = manage open BTC demo position once
 ```
 
 XAUUSD/gold is normally closed on Saturday and Sunday. On weekends, use BTC live/report instead and leave XAU live off.
@@ -187,6 +188,8 @@ demo_only: true
 fixed_lot: 0.01
 max_open_trades: 1
 daily_max_loss_usd: 5
+manage_positions: true
+move_be_at_rr: 1.0
 ```
 
 XAU remains OFF.
@@ -196,13 +199,16 @@ Check:
 ```text
 MAIN BTC Execution Status
 MAIN XAU Execution Status
+10 Gloc Execution Manage
 ```
 
-Correct current status:
+Current BTC status:
 
 ```text
-enabled: False
-mode: manual_only
+enabled: True
+mode: demo_auto
+dry_run: False
+demo_only: True
 ```
 
 ## Manual Trade Journal
