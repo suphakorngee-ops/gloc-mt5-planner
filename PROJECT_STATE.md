@@ -1,6 +1,6 @@
 # MT5 Planner Project State
 
-saved_at: 2026-05-10T04:51:26
+saved_at: 2026-05-10T05:10:56
 
 ## Current Mode
 
@@ -22,22 +22,22 @@ FORWARD TEST REPORT
 ========================================================================
 start_at: 2026-05-09T00:00:00+00:00
 signals: 34
-trade ideas: 6 grouped from 34 raw signals | wins 4 | losses 1 | open 1 | timeout 0 | closed WR 80.0%
-raw signals: wins 21 | losses 7 | open 6 | timeout 0 | be 0
-closed win rate: 75.0%
-expectancy: 0.721R/signal | profit factor: 4.50
-avg win: 1.50R | avg loss: -1.00R | avg $risk: 2.25
+trade ideas: 6 grouped from 34 raw signals | wins 5 | losses 1 | open 0 | timeout 0 | closed WR 83.3%
+raw signals: wins 27 | losses 7 | open 0 | timeout 0 | be 0
+closed win rate: 79.4%
+expectancy: 0.853R/signal | profit factor: 5.14
+avg win: 1.33R | avg loss: -1.00R | avg $risk: 2.25
 progress: 34/50 (16 left) | 34/100 (66 left)
 decision: WAIT - collect at least 50 forward signals
 
 SESSION
 session          win    sl   open  timeout       wr
 London/NY         21     7      0        0    75.0%
-NY                 0     0      6        0     0.0%
+NY                 6     0      0        0   100.0%
 
 MODE
 mode             win    sl   open  timeout       wr
-safe              21     7      6        0    75.0%
+safe              27     7      0        0    79.4%
 
 RECENT
 created_at                   side   status        entry         sl         tp
@@ -46,7 +46,7 @@ created_at                   side   status        entry         sl         tp
 2026-05-09T15:42:50.735949+00:00 long   tp        80497.487  80218.230  80916.373
 2026-05-09T15:43:25.864966+00:00 long   tp        80424.474  80218.230  80733.840
 2026-05-09T15:50:21.884131+00:00 long   tp        80506.164  80218.230  80938.065
-2026-05-09T17:05:55.007147+00:00 long   open      80701.242  80401.450  81105.962
+2026-05-09T17:05:55.007147+00:00 long   tp1       80701.242  80401.450  81105.962
 ```
 
 ```text
@@ -62,10 +62,10 @@ date         signals   win    sl   open  timeout       wr     expR      pf
 2026-05-07         0     0     0      0        0     0.0%    0.000    0.00
 2026-05-08         0     0     0      0        0     0.0%    0.000    0.00
 2026-05-09        28    21     7      0        0    75.0%    0.875    4.50
-2026-05-10         6     0     0      6        0     0.0%    0.000    0.00
+2026-05-10         6     6     0      0        0   100.0%    0.750    0.00
 
 TOTAL
-signals 34 | win 21 | sl 7 | open 6 | timeout 0 | wr 75.0% | expectancy 0.721R | PF 4.50
+signals 34 | win 27 | sl 7 | open 0 | timeout 0 | wr 79.4% | expectancy 0.853R | PF 5.14
 
 NEXT
 - keep collecting until 50-100 current-logic forward signals

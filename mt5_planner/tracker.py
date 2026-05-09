@@ -46,8 +46,18 @@ def evaluate_open_signals(rows: list[dict], candles) -> list[dict]:
 
 def first_hit(row: dict, candles) -> dict | None:
     direction = row["direction"]
+    entry = float(row["entry"])
     sl = float(row["stop_loss"])
     tp = float(row["take_profit"])
+    payload = json.loads(row.get("payload") or "{}")
+    tp1_rr = float(payload.get("tp1_rr") or 0)
+    risk = abs(entry - sl)
+    tp1 = None
+    if risk > 0 and tp1_rr > 0:
+        if direction == "long":
+            tp1 = entry + risk * tp1_rr
+        else:
+            tp1 = entry - risk * tp1_rr
 
     for _, candle in candles.iterrows():
         high = float(candle["high"])
@@ -55,14 +65,18 @@ def first_hit(row: dict, candles) -> dict | None:
         if direction == "long":
             hit_sl = low <= sl
             hit_tp = high >= tp
+            hit_tp1 = tp1 is not None and high >= tp1
         else:
             hit_sl = high >= sl
             hit_tp = low <= tp
+            hit_tp1 = tp1 is not None and low <= tp1
 
-        if hit_sl and hit_tp:
+        if hit_sl and (hit_tp or hit_tp1):
             return {"status": "ambiguous", "time": candle["time"], "price": float(candle["close"])}
         if hit_sl:
             return {"status": "sl", "time": candle["time"], "price": sl}
+        if hit_tp1:
+            return {"status": "tp1", "time": candle["time"], "price": round(tp1, 3)}
         if hit_tp:
             return {"status": "tp", "time": candle["time"], "price": tp}
 
