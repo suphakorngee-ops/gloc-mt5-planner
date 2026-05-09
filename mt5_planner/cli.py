@@ -201,25 +201,20 @@ def attach_context(plans: list[dict], quality: dict, session: str, spread: dict,
 
 
 def trade_idea_key(plan: dict) -> str:
-    entry = float(plan.get("entry") or 0)
-    stop = float(plan.get("stop_loss") or 0)
-    risk = abs(entry - stop)
-    zone_size = max(risk * 0.35, 1.0)
-    zone = round(entry / zone_size)
     setup = str(plan.get("setup") or "-")
     return "|".join(
         [
             str(plan.get("mode") or "-"),
             str(plan.get("direction") or "-"),
             setup,
-            str(zone),
         ]
     )
 
 
 def duplicate_window_seconds(plan: dict) -> int:
     valid_for_bars = int(plan.get("valid_for_bars") or 2)
-    return max(valid_for_bars, 1) * 5 * 60
+    # Treat repeated planner prints from the same setup as one trade idea.
+    return max(max(valid_for_bars, 1) * 5 * 60, 15 * 60)
 
 
 def command_demo(_: argparse.Namespace) -> None:

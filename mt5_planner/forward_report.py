@@ -45,13 +45,19 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
     if len(idea_rows) != total:
         idea_wins = [row for row in idea_rows if row.get("status") in ("tp", "tp1")]
         idea_losses = [row for row in idea_rows if row.get("status") == "sl"]
+        idea_open = [row for row in idea_rows if row.get("status") == "open"]
+        idea_timeout = [row for row in idea_rows if row.get("status") == "timeout"]
         idea_closed = len(idea_wins) + len(idea_losses)
         idea_wr = len(idea_wins) / idea_closed * 100 if idea_closed else 0
         lines.append(
             f"trade ideas: {len(idea_rows)} grouped from {total} raw signals | "
-            f"wins {len(idea_wins)} | losses {len(idea_losses)} | closed WR {idea_wr:.1f}%"
+            f"wins {len(idea_wins)} | losses {len(idea_losses)} | open {len(idea_open)} | "
+            f"timeout {len(idea_timeout)} | closed WR {idea_wr:.1f}%"
         )
-    lines.append(f"wins: {len(wins)} | losses: {len(losses)} | open: {len(open_rows)} | timeout: {len(timeout_rows)} | be: {len(be_rows)}")
+    lines.append(
+        f"raw signals: wins {len(wins)} | losses {len(losses)} | open {len(open_rows)} | "
+        f"timeout {len(timeout_rows)} | be {len(be_rows)}"
+    )
     lines.append(f"closed win rate: {win_rate:.1f}%")
     lines.append(f"expectancy: {expectancy:.3f}R/signal | profit factor: {profit_factor:.2f}")
     lines.append(f"avg win: {avg_win_r:.2f}R | avg loss: -{avg_loss_r:.2f}R | avg $risk: {avg_risk:.2f}")
@@ -62,11 +68,11 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
     lines.append("")
     lines.extend(group_section(forward_rows, "mode"))
     lines.append("")
-    lines.extend(recent_section(forward_rows))
+    lines.extend(recent_section(idea_rows))
     return "\n".join(lines)
 
 
-def group_trade_ideas(rows: list[dict], window_seconds: int = 600) -> list[dict]:
+def group_trade_ideas(rows: list[dict], window_seconds: int = 900) -> list[dict]:
     groups = []
     for row in rows:
         created = row_time(row)
@@ -118,7 +124,7 @@ def combine_group(rows: list[dict]) -> dict:
 
 def row_idea_key(row: dict) -> str:
     if row.get("idea_key"):
-        return str(row["idea_key"])
+        return normalize_idea_key(str(row["idea_key"]))
     payload = row.get("payload")
     setup = "-"
     if payload:
@@ -133,6 +139,13 @@ def row_idea_key(row: dict) -> str:
             setup,
         ]
     )
+
+
+def normalize_idea_key(value: str) -> str:
+    parts = value.split("|")
+    if len(parts) >= 4 and parts[-1].replace("-", "").isdigit():
+        return "|".join(parts[:-1])
+    return value
 
 
 def parse_time(value: str) -> datetime | None:
