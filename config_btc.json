@@ -1,6 +1,7 @@
 {
   "symbol": "BTCUSDm",
   "timeframe": "M5",
+  "account_type": "demo",
   "bars": 10000,
   "poll_seconds": 10,
   "risk_per_trade": 0.005,
@@ -33,13 +34,16 @@
     }
   },
   "execution": {
-    "enabled": false,
-    "mode": "manual_only",
+    "enabled": true,
+    "mode": "demo_auto",
+    "dry_run": false,
     "demo_only": true,
     "max_open_trades": 1,
     "daily_max_loss_usd": 5,
     "duplicate_guard": true,
-    "emergency_stop": true
+    "emergency_stop": true,
+    "magic": 505501,
+    "deviation_points": 50
   },
   "spread_filter": {
     "max_spread_price": 20.0

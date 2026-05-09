@@ -32,6 +32,7 @@ from .backup import run_backup
 from .automation import run_safe_automation
 from .discord_bot import build_discord_reply
 from .agent_runtime import agent_status, enqueue_task, run_agent_loop, run_agent_once
+from .demo_executor import execute_latest_signal, execute_saved_plans
 
 
 def load_config(path: str) -> dict:
@@ -96,8 +97,9 @@ def command_run(args: argparse.Namespace) -> None:
             plans = []
         session = session_label(df.dropna().iloc[-1]["time"])
         tracker_count = track_results(journal, df)
-        saved_count = save_plans(journal, config, plans)
-        emit_signal_alert(config["symbol"], config["timeframe"], plans, saved_count, config)
+        saved_count, saved_plans = save_plans_detail(journal, config, plans)
+        emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
+        print_execution_results(execute_saved_plans(config, saved_plans))
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -140,8 +142,9 @@ def command_csv(args: argparse.Namespace) -> None:
             plans = []
         session = session_label(df.dropna().iloc[-1]["time"])
         tracker_count = track_results(journal, df)
-        saved_count = save_plans(journal, config, plans)
-        emit_signal_alert(config["symbol"], config["timeframe"], plans, saved_count, config)
+        saved_count, saved_plans = save_plans_detail(journal, config, plans)
+        emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
+        print_execution_results(execute_saved_plans(config, saved_plans))
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -165,11 +168,25 @@ def command_csv(args: argparse.Namespace) -> None:
 
 
 def save_plans(journal: Journal, config: dict, plans: list[dict]) -> int:
+    saved_count, _ = save_plans_detail(journal, config, plans)
+    return saved_count
+
+
+def save_plans_detail(journal: Journal, config: dict, plans: list[dict]) -> tuple[int, list[dict]]:
     saved_count = 0
+    saved_plans = []
     for plan in plans:
         if journal.save_signal(config["symbol"], config["timeframe"], plan):
             saved_count += 1
-    return saved_count
+            saved_plans.append(plan)
+    return saved_count, saved_plans
+
+
+def print_execution_results(results: list[dict]) -> None:
+    for result in results:
+        status = result.get("status", "-")
+        reason = result.get("reason", "-")
+        print(f"VLOC EXECUTION {status}: {reason}")
 
 
 def track_results(journal: Journal, df) -> int:
@@ -394,6 +411,16 @@ def command_dashboard_serve(args: argparse.Namespace) -> None:
 def command_execution_status(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     print(execution_status(config))
+
+
+def command_execution_dry_run(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    results = execute_latest_signal(config, force_dry_run=True)
+    if not results:
+        print("no execution results")
+        return
+    for result in results:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
 def command_execution_lock(args: argparse.Namespace) -> None:
@@ -632,6 +659,10 @@ def main() -> None:
     execution_parser = sub.add_parser("execution-status")
     execution_parser.add_argument("--config", default="config.json")
     execution_parser.set_defaults(func=command_execution_status)
+
+    execution_dry_run_parser = sub.add_parser("execution-dry-run")
+    execution_dry_run_parser.add_argument("--config", default="config.json")
+    execution_dry_run_parser.set_defaults(func=command_execution_dry_run)
 
     execution_lock_parser = sub.add_parser("execution-lock")
     execution_lock_parser.add_argument("--config", default="config.json")

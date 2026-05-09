@@ -1,11 +1,12 @@
 # MT5 Planner Project State
 
-saved_at: 2026-05-10T05:10:56
+saved_at: 2026-05-10T05:20:19
 
 ## Current Mode
 
-- Forward test / paper signal only
-- Auto execution OFF
+- Forward tracking remains enabled
+- BTC demo auto execution may be ON if `config_btc.json` says enabled
+- XAU execution remains OFF unless explicitly changed
 - Fixed lot 0.01
 - Clean current journals
 
@@ -15,7 +16,7 @@ saved_at: 2026-05-10T05:10:56
 - journal: journal_btc_current.sqlite
 - csv: btcusdm_m5.csv
 - fixed_lot: 0.01
-- execution_enabled: False
+- execution_enabled: True
 
 ```text
 FORWARD TEST REPORT
@@ -117,5 +118,5 @@ NEXT
 2. Use `02 Gloc XAU Live Weekdays` only when the gold market is open.
 3. Use `03 Gloc Dashboard Live` for live view and manual marks.
 4. Use `04 Gloc Safe Automation` for report, daily, save-state, backup, and Discord digest.
-5. Collect 50-100 forward signals before strategy or execution changes.
-6. Keep auto execution disabled until forward data passes the gate.
+5. Keep BTC auto execution demo-only with fixed lot 0.01 and guards.
+6. Keep XAU execution disabled until enough weekday forward data exists.

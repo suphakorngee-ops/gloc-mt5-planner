@@ -1,6 +1,7 @@
 {
   "symbol": "XAUUSDm",
   "timeframe": "M5",
+  "account_type": "demo",
   "bars": 10000,
   "poll_seconds": 10,
   "risk_per_trade": 0.005,
@@ -34,12 +35,15 @@
   },
   "execution": {
     "enabled": false,
-    "mode": "manual_only",
+    "mode": "demo_auto",
+    "dry_run": true,
     "demo_only": true,
     "max_open_trades": 1,
     "daily_max_loss_usd": 20,
     "duplicate_guard": true,
-    "emergency_stop": true
+    "emergency_stop": true,
+    "magic": 505502,
+    "deviation_points": 50
   },
   "spread_filter": {
     "max_spread_price": 0.8

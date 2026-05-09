@@ -11,6 +11,7 @@ def execution_status(config: dict) -> str:
     lines.append("=" * 72)
     lines.append(f"enabled: {enabled}")
     lines.append(f"mode: {settings.get('mode', 'manual_only')}")
+    lines.append(f"dry_run: {settings.get('dry_run', True)}")
     lines.append(f"demo_only: {settings.get('demo_only', True)}")
     lines.append(f"max_open_trades: {settings.get('max_open_trades', 1)}")
     lines.append(f"daily_max_loss_usd: {settings.get('daily_max_loss_usd', 0)}")
@@ -20,13 +21,15 @@ def execution_status(config: dict) -> str:
     lines.append(f"daily_locked: {guard['daily_locked']}")
     lines.append(f"duplicate_seen_file: {guard['duplicate_seen_file']}")
     lines.append("")
-    if enabled:
-        lines.append("BLOCKED: execution code is scaffolded but live order sending is not implemented in this build.")
+    if enabled and settings.get("dry_run", True):
+        lines.append("DRY RUN: execution gateway validates signals but does not send MT5 orders.")
+    elif enabled:
+        lines.append("DEMO AUTO: execution gateway can send MT5 demo orders if all guards pass.")
     else:
-        lines.append("SAFE: auto execution is OFF. Planner is manual/paper only.")
+        lines.append("SAFE: execution gateway is OFF. Planner is manual/paper only.")
     lines.append("")
     lines.append("Before enabling in future:")
-    lines.append("- 50-100 current forward signals")
+    lines.append("- 50-100 current forward signals unless user accepts demo-only early testing")
     lines.append("- positive expectancy and profit factor > 1.3")
     lines.append("- tested on demo/cent only")
     lines.append("- daily loss, duplicate order, and max trade guards verified")

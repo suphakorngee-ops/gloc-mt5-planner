@@ -490,7 +490,10 @@ Important:
 - Current Discord is webhook-only: send alert out, cannot receive user chat.
 - Future Discord question/answer needs a real Discord Bot service with bot token.
 - Future multi-model can use Gemini/Gemma/GPT, but all models should read/write shared files and reports.
-- Vloc Executor remains the only future order gateway and is OFF.
+- Vloc Executor is now the only order gateway through `mt5_planner/demo_executor.py`.
+- BTC demo auto execution is enabled with `demo_only=true`, `dry_run=false`, fixed lot `0.01`, max open trades `1`, daily max loss `$5`, duplicate guard, and Discord ops alert.
+- XAU execution remains OFF.
+- Do not add any other order sender outside Vloc/demo_executor.
 - Local-first real agent runtime started:
   - `SOUL.md`, `AGENT_RULES.md`, `TRADE_LESSONS.md`
   - `agents/gloc/agent_manifest.json`

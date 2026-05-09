@@ -173,9 +173,23 @@ MAIN XAU Daily Summary
 
 When a new signal is saved, the planner can beep, print `NEW SIGNAL`, and write the alert into `reports/alerts.log`.
 
-## Auto Execution Skeleton
+## BTC Demo Auto Execution
 
-Auto execution is scaffolded but OFF.
+BTC demo auto execution is now available through Vloc Executor.
+
+Current BTC setting:
+
+```text
+enabled: true
+mode: demo_auto
+dry_run: false
+demo_only: true
+fixed_lot: 0.01
+max_open_trades: 1
+daily_max_loss_usd: 5
+```
+
+XAU remains OFF.
 
 Check:
 

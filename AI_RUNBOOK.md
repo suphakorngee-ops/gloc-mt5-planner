@@ -242,7 +242,28 @@ Suggested read-only commands first:
 /save-state
 ```
 
-Commands that affect trading must stay disabled until Vloc Executor passes the auto execution gate.
+BTC demo auto execution is now implemented through `mt5_planner/demo_executor.py`.
+Vloc Executor is the only order gateway.
+
+Current execution state:
+
+```text
+BTC demo: enabled=true, dry_run=false, demo_only=true, fixed lot 0.01
+XAU demo: enabled=false, dry_run=true
+```
+
+Guards:
+
+```text
+demo account check via MT5 account trade_mode
+max_open_trades=1
+daily_max_loss_usd=5 for BTC
+duplicate seen file under guards/
+daily lock file under guards/
+Discord ops alert after execution/reject
+```
+
+Do not add any second order sender. Keep all order actions inside Vloc/demo_executor.
 
 ## Multi-Model Future
 

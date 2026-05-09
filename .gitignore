@@ -28,6 +28,7 @@ reports/
 !reports/.gitkeep
 agents/gloc/logs/
 agents/gloc/queue/*.jsonl
+guards/
 
 # Market/export/generated data
 *.csv
