@@ -156,7 +156,7 @@ demo/cent only flag implemented
   - configured under `alerts.discord`
   - default `enabled=false`
   - can read webhook from env `MT5_PLANNER_DISCORD_WEBHOOK`
-  - setup docs: `DISCORD_ALERT_SETUP.md`
+  - setup docs: `docs/DISCORD_ALERT_SETUP.md`
 - Safe automation:
   - command `safe-automation`
   - VSCode task `11 MAIN Safe Automation + Discord Digest`
@@ -179,7 +179,7 @@ demo/cent only flag implemented
   - command `resend-latest` and task `09 Gloc Resend Latest Signal` resend latest signal to Discord
   - Discord format is compact with emoji icons and always says paper/manual only, auto execution OFF
   - Discord route support: signals/reports/ops webhooks with fallback to `MT5_PLANNER_DISCORD_WEBHOOK`
-  - setup docs: `DISCORD_CHANNEL_SETUP.md`
+  - setup docs: `docs/DISCORD_CHANNEL_SETUP.md`
 - Agent architecture docs:
   - `AGENT_ARCHITECTURE.md`
   - five-agent model: Gloc Analyst, Vloc Executor, Kloc Journal, Rloc Reporter, Oloc Scheduler
@@ -291,7 +291,7 @@ Local-first real agent scaffolding exists:
 SOUL.md
 AGENT_RULES.md
 TRADE_LESSONS.md
-LOCAL_AGENT_SETUP.md
+docs/LOCAL_AGENT_SETUP.md
 agents/gloc/agent_manifest.json
 agents/gloc/queue/pending.jsonl
 agents/gloc/queue/done.jsonl
@@ -314,7 +314,7 @@ Vloc remains blocked from order actions.
 
 OpenClaw note:
 
-- `OPENCLAW_NOTES.md` explains it.
+- `docs/OPENCLAW_NOTES.md` explains it.
 - Do not put OpenClaw in the trading path yet.
 - Current safer path is direct CSV/journal/scripts.
 

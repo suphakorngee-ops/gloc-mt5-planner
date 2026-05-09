@@ -1,7 +1,7 @@
 from html import escape
 from pathlib import Path
 
-from .forward_report import r_multiple
+from .forward_report import group_trade_ideas, r_multiple
 
 
 def build_dashboard(sections: list[dict], output: str = "reports/dashboard.html", refresh_seconds: int = 15) -> str:
@@ -52,12 +52,14 @@ def build_dashboard(sections: list[dict], output: str = "reports/dashboard.html"
 def render_section(section: dict) -> str:
     rows = section["rows"]
     metrics = compute_metrics(rows)
+    idea_rows = group_trade_ideas(rows)
     recent_rows = rows[-8:]
     return f"""
 <section class="card">
   <h2>{escape(section['name'])}</h2>
   <div class="metrics">
-    {metric('Signals', metrics['signals'])}
+    {metric('Ideas', metrics['ideas'])}
+    {metric('Raw', metrics['signals'])}
     {metric('Progress', f"{metrics['signals']}/50")}
     {metric('Win Rate', f"{metrics['wr']:.1f}%", 'good' if metrics['wr'] >= 60 else '')}
     {metric('Expectancy', f"{metrics['expectancy']:.3f}R", 'good' if metrics['expectancy'] > 0 else 'bad')}
@@ -66,7 +68,7 @@ def render_section(section: dict) -> str:
   </div>
   <table>
     <thead><tr><th>Time</th><th>Side</th><th>Paper</th><th>Manual</th><th>Entry</th><th>$Risk</th></tr></thead>
-    <tbody>{''.join(render_row(row) for row in recent_rows) or '<tr><td colspan="5" class="muted">No forward signals yet</td></tr>'}</tbody>
+    <tbody>{''.join(render_row(row) for row in idea_rows[-8:]) or '<tr><td colspan="5" class="muted">No forward signals yet</td></tr>'}</tbody>
   </table>
 </section>
 """
@@ -87,16 +89,18 @@ def render_row(row: dict) -> str:
 
 
 def compute_metrics(rows: list[dict]) -> dict:
-    wins = len([row for row in rows if row.get("status") in ("tp", "tp1")])
-    losses = len([row for row in rows if row.get("status") == "sl"])
-    open_rows = len([row for row in rows if row.get("status") == "open"])
+    idea_rows = group_trade_ideas(rows)
+    wins = len([row for row in idea_rows if row.get("status") in ("tp", "tp1")])
+    losses = len([row for row in idea_rows if row.get("status") == "sl"])
+    open_rows = len([row for row in idea_rows if row.get("status") == "open"])
     closed = wins + losses
-    values = [r_multiple(row) for row in rows]
+    values = [r_multiple(row) for row in idea_rows]
     values = [value for value in values if value is not None]
     gross_win = sum(value for value in values if value > 0)
     gross_loss = abs(sum(value for value in values if value < 0))
     return {
         "signals": len(rows),
+        "ideas": len(idea_rows),
         "open": open_rows,
         "wr": wins / closed * 100 if closed else 0.0,
         "expectancy": sum(values) / len(values) if values else 0.0,

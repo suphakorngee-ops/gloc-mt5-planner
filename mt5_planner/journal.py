@@ -219,7 +219,7 @@ class Journal:
             rows = conn.execute(
                 """
                 select
-                    created_at, symbol, timeframe, mode, direction,
+                    id, created_at, symbol, timeframe, mode, direction,
                     entry, stop_loss, take_profit, risk_reward,
                     quality_score, quality_label, session, spread, lot,
                     actual_risk_usd, idea_key, status, closed_at, close_price,

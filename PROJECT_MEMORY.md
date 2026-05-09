@@ -120,7 +120,7 @@ Current tuning:
 - `mt5_planner/tracker.py`
 - `mt5_planner/journal.py`
 - `config.json`
-- `strategy_champion_prompt.md`
+- `docs/strategy_champion_prompt.md`
 - `youtube_notes/strategy_takeaways.md`
 
 ## Next Ideas
@@ -271,7 +271,7 @@ Manual demo rule:
 - Added `daily-report` command and VSCode tasks:
   - `MAIN BTC Daily Summary`
   - `MAIN XAU Daily Summary`
-- Added `QUICK_RUN_GUIDE.md`.
+- Added `docs/QUICK_RUN_GUIDE.md`.
 - Added user/AI guide split:
   - `USER_PLAYBOOK.md` is for the user to run the system day to day.
   - `AI_RUNBOOK.md` is for future AI chats to continue the project without restarting.
@@ -431,7 +431,7 @@ Then rerun:
 - Discord alert support added:
   - `alerts.discord.enabled` default false
   - webhook from config or `MT5_PLANNER_DISCORD_WEBHOOK`
-  - docs in `DISCORD_ALERT_SETUP.md`
+  - docs in `docs/DISCORD_ALERT_SETUP.md`
 - User provided Discord webhook and local secret file was created:
   - `DISCORD_WEBHOOK.local.ps1`
   - loaded by `MT5_PLANNER.ps1`
@@ -462,7 +462,7 @@ Then rerun:
   - Discord messages are compact and icon-based: header, entry/SL/TP, RR/lot/risk/quality, setup
   - Discord route support added: `signals`, `reports`, `ops`
   - env vars: `MT5_PLANNER_DISCORD_SIGNALS_WEBHOOK`, `MT5_PLANNER_DISCORD_REPORTS_WEBHOOK`, `MT5_PLANNER_DISCORD_OPS_WEBHOOK`
-  - docs: `DISCORD_CHANNEL_SETUP.md`
+  - docs: `docs/DISCORD_CHANNEL_SETUP.md`
 - Agent architecture doc added:
   - `AGENT_ARCHITECTURE.md`
   - five-agent model: Gloc Analyst, Vloc Executor, Kloc Journal, Rloc Reporter, Oloc Scheduler
@@ -505,7 +505,7 @@ Important:
   - scripts: `START_LOCAL_AGENTS.ps1`, `start_local_agents.sh`
   - tested Rloc queued report -> done log
   - added `agent-run-loop` plus `loop-rloc` and `loop-oloc` scripts
-  - added `OPENCLAW_NOTES.md`; OpenClaw is optional and not needed for current CSV/journal workflow
+  - added `docs/OPENCLAW_NOTES.md`; OpenClaw is optional and not needed for current CSV/journal workflow
   - added Windows Task Scheduler scripts under `scripts/scheduler/`
   - scheduler tasks: `Gloc Rloc Loop`, `Gloc Oloc Loop`
   - VSCode tasks: `10 Gloc Scheduler Status`, `11 Gloc Install Scheduler`, `12 Gloc Uninstall Scheduler`

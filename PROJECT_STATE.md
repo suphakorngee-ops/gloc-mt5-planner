@@ -1,6 +1,6 @@
 # MT5 Planner Project State
 
-saved_at: 2026-05-10T05:41:54
+saved_at: 2026-05-10T05:54:15
 
 ## Current Mode
 

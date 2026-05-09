@@ -159,6 +159,7 @@ AI_RUNBOOK.md           continuation instructions for Codex
 USER_PLAYBOOK.md        day-to-day user guide
 AGENT_RULES.md          agent safety rules
 TRADE_LESSONS.md        lessons from signals and mistakes
+docs/                   setup notes and supporting docs
 config_btc.json         BTC demo config
 config.json             XAU demo config
 mt5_planner/            source code

@@ -311,7 +311,7 @@ PROJECT_STATE.md
 อ่าน:
 
 ```text
-DISCORD_ALERT_SETUP.md
+docs/DISCORD_ALERT_SETUP.md
 ```
 
 ค่าเริ่มต้นยังปิดอยู่ ต้องใส่ Discord webhook และเปิด:
