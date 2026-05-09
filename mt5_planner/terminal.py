@@ -23,25 +23,25 @@ def print_report(
     block_reason: str | None = None,
     strategy_block_reason: str | None = None,
     features: dict | None = None,
+    config: dict | None = None,
 ) -> None:
     last = df.dropna().iloc[-1]
     candle_time = last["time"]
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
     width = 96
+
     print("═" * width)
     session_text = f" | session {session}" if session else ""
     print(f"📊 {symbol} {timeframe} | updated {now} | candle {candle_time}{session_text}")
     print("═" * width)
     print("💹 MARKET")
-    line = (
-        f"price {last['close']:.3f} | rsi {last['rsi']:.1f} | atr {last['atr']:.3f}"
-    )
+    line = f"price {last['close']:.3f} | rsi {last['rsi']:.1f} | atr {last['atr']:.3f}"
     if spread and spread.get("available"):
         line += f" | spread {spread['spread']:.3f}"
     print(line)
     if quality:
         print(f"⭐ quality {quality['label']} / {quality['score']} | {quality['notes']}")
+
     if features and features.get("ok"):
         print("─" * width)
         print("🧱 STRUCTURE")
@@ -57,8 +57,12 @@ def print_report(
         print_levels(features, width)
     else:
         print(f"swing_low {last['swing_low']:.3f} | swing_high {last['swing_high']:.3f}")
+
     print("─" * width)
-    print("🧪 mode: FORWARD TEST | paper signal tracked even if skipped | real execution: manual only")
+    print(execution_line(config))
+    position_line = mt5_position_line(config)
+    if position_line:
+        print(position_line)
     print("─" * width)
 
     if not plans:
@@ -102,7 +106,7 @@ def print_report(
     print(f"📝 reason: {plans[0]['reason']}")
     valid_for = plans[0].get("valid_for_bars")
     if valid_for:
-        print(f"⏳ trade note: optional demo only; do not chase after {valid_for} closed candles")
+        print(f"⏳ trade note: valid for {valid_for} closed candles")
     fixed = [plan["mode"] for plan in plans if plan.get("risk_note") == "fixed_lot"]
     risky = [plan["mode"] for plan in plans if plan.get("risk_note") == "min_lot_exceeds_target_risk"]
     if fixed:
@@ -113,6 +117,63 @@ def print_report(
     if risk_warnings:
         print(f"⚠️ risk warning: {' | '.join(risk_warnings)}")
     print("═" * width)
+
+
+def execution_line(config: dict | None) -> str:
+    if not config:
+        return "🧪 mode: FORWARD TRACK | execution: unknown"
+    execution = config.get("execution", {})
+    enabled = bool(execution.get("enabled", False))
+    dry_run = bool(execution.get("dry_run", True))
+    demo_only = bool(execution.get("demo_only", True))
+    manager = bool(execution.get("manage_positions", False))
+    if enabled and not dry_run:
+        state = "DEMO AUTO ON" if demo_only else "AUTO ON"
+    elif enabled:
+        state = "DRY RUN"
+    else:
+        state = "OFF"
+    return (
+        f"🧪 mode: FORWARD TRACK | execution: {state} | "
+        f"Vloc manager: {'ON' if manager else 'OFF'} | lot {config.get('position_sizing', {}).get('fixed_lot', '-')}"
+    )
+
+
+def mt5_position_line(config: dict | None) -> str:
+    if not config:
+        return ""
+    try:
+        from .mt5_runtime import initialize_mt5
+
+        mt5 = initialize_mt5(config)
+        positions = mt5.positions_get(symbol=config["symbol"]) or []
+    except Exception:
+        return "📌 MT5 position: unavailable"
+
+    if not positions:
+        return "📌 MT5 position: none"
+
+    magic = int(config.get("execution", {}).get("magic", 0) or 0)
+    parts = []
+    has_manual = False
+    for position in positions[:3]:
+        is_buy = int(position.type) == mt5.POSITION_TYPE_BUY
+        owner = "Vloc" if int(getattr(position, "magic", 0) or 0) == magic else "Manual"
+        has_manual = has_manual or owner == "Manual"
+        risk = abs(float(position.price_open) - float(position.sl or 0))
+        current_r = 0.0
+        if risk > 0:
+            current_r = (
+                (float(position.price_current) - float(position.price_open)) / risk
+                if is_buy
+                else (float(position.price_open) - float(position.price_current)) / risk
+            )
+        parts.append(
+            f"{owner} #{int(position.ticket)} {'BUY' if is_buy else 'SELL'} "
+            f"{float(position.volume):.2f} | P/L ${float(position.profit):.2f} | {current_r:.2f}R"
+        )
+    suffix = " | Vloc will not manage Manual orders" if has_manual else ""
+    return f"📌 MT5 position: {' ; '.join(parts)}{suffix}"
 
 
 def print_levels(features: dict, width: int) -> None:

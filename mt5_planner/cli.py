@@ -117,6 +117,7 @@ def command_run(args: argparse.Namespace) -> None:
             block_reason,
             analysis.get("block_reason"),
             features,
+            config,
         )
 
         if args.once:
@@ -163,6 +164,7 @@ def command_csv(args: argparse.Namespace) -> None:
             block_reason,
             analysis.get("block_reason"),
             features,
+            config,
         )
 
         if args.once:
