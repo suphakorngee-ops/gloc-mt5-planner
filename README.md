@@ -1,92 +1,204 @@
-# MT5 AI Trading Planner MVP
+# Gloc MT5 Planner
 
-MVP สำหรับเริ่มทำ dashboard/agent วิเคราะห์กราฟจาก MT5:
+Local-first MT5 trading planner for BTCUSDm and XAUUSDm on M5.
 
-- ดึง candles จาก MT5
-- คำนวณ indicators พื้นฐาน
-- สร้างแผน `safe`, `mid`, `aggressive`
-- คำนวณ `R:R`
-- บันทึก signal ลง SQLite journal
-- เริ่มจาก demo/log เท่านั้น ยังไม่ส่ง order จริง
+Gloc is built to read MT5 chart data, create guarded trade plans, journal every signal, report results, send Discord alerts, and run BTC demo execution through one controlled gateway.
 
-## ติดตั้ง
+## Current Mode
 
-ต้องมี Python และ MT5 terminal เปิด login ไว้
+- BTCUSDm M5: demo auto execution is enabled.
+- XAUUSDm M5: execution is OFF.
+- Fixed lot: `0.01`.
+- BTC execution is demo-only and must pass Vloc guards.
+- GitHub is used for private source backup, not for secrets or live trading data.
 
-```powershell
-pip install -r requirements.txt
+## Main Flow
+
+```text
+MT5 EA exporter
+-> CSV in MQL5/Files
+-> VS Code task / PowerShell runner
+-> Gloc BTC Live Planner
+-> Journal SQLite
+-> Forward report / daily report / dashboard
+-> Discord signal/report/ops alerts
+-> Vloc Demo Executor for BTC only
 ```
 
-ถ้าใช้ Python launcher:
+## Safety Rules
+
+- Only Vloc may send orders.
+- BTC orders are demo-only.
+- XAU orders are disabled.
+- No Discord chat command may send, close, or modify an order.
+- Webhooks, journals, live CSV files, logs, reports, backups, and guard files stay local only.
+
+## BTC Demo Execution Guards
+
+BTC demo auto execution uses `mt5_planner/demo_executor.py`.
+
+Current BTC config:
+
+```text
+enabled: true
+mode: demo_auto
+dry_run: false
+demo_only: true
+fixed_lot: 0.01
+max_open_trades: 1
+daily_max_loss_usd: 5
+duplicate_guard: true
+emergency_stop: true
+```
+
+The executor checks:
+
+- MT5 account trade mode is demo.
+- Daily lock is not active.
+- Duplicate signal has not already been seen.
+- Risk guard passes.
+- Lot size is valid.
+- Open position count is below the limit.
+- Discord ops alert is sent after sent/reject/error.
+
+## Current Forward Status
+
+As of the latest saved state:
+
+```text
+BTC signals: 34
+BTC trade ideas: 6 grouped from 34 raw signals
+BTC idea result: wins 5 | losses 1 | open 0
+BTC closed WR: 83.3%
+BTC PF: 5.14
+BTC expectancy: +0.853R/signal
+
+XAU signals: 0
+XAU execution: OFF
+```
+
+These numbers are forward-test data and can change as more signals are collected.
+
+## Run In VS Code
+
+Use `Terminal > Run Task...`.
+
+```text
+01 Gloc BTC Live              run BTC planner and BTC demo executor
+02 Gloc XAU Live Weekdays     run XAU planner only when gold market is open
+03 Gloc Dashboard Live        live dashboard server
+04 Gloc Safe Automation       report, daily, state, backup, Discord digest
+05 Gloc Report All            forward report
+06 Gloc Daily Summary All     daily summary
+07 Gloc Execution Status      confirm BTC/XAU execution state
+08 Gloc Execution Dry Run     validate latest BTC signal without order
+10 Gloc Resend Latest Signal  resend latest Discord signal
+17 Gloc Discord Bot Run       run Discord Q&A bot when token is configured
+```
+
+## Run By PowerShell
+
+```powershell
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action live
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action execution
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-dry-run
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action report
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action safe-automation
+```
+
+## Market Notes
+
+- BTC can run on weekends if the broker feed is active.
+- XAU is normally closed on Saturday/Sunday, so XAU live/execution should stay inactive during gold market closure.
+- If MT5 or the EA exporter is not running, Gloc can only use the last local CSV copy.
+
+## Discord
+
+Recommended Discord channels:
+
+```text
+#gloc-signals
+#gloc-reports
+#gloc-ops
+#gloc-chat
+```
+
+Webhook route support:
+
+```text
+signals -> MT5_PLANNER_DISCORD_SIGNALS_WEBHOOK
+reports -> MT5_PLANNER_DISCORD_REPORTS_WEBHOOK
+ops     -> MT5_PLANNER_DISCORD_OPS_WEBHOOK
+fallback -> MT5_PLANNER_DISCORD_WEBHOOK
+```
+
+Secrets must stay in `DISCORD_WEBHOOK.local.ps1` or local environment variables. Do not commit them.
+
+## Important Files
+
+```text
+PROJECT_STATE.md        latest saved state
+PROJECT_MEMORY.md       long-term project memory
+AI_RUNBOOK.md           continuation instructions for Codex
+USER_PLAYBOOK.md        day-to-day user guide
+AGENT_RULES.md          agent safety rules
+TRADE_LESSONS.md        lessons from signals and mistakes
+config_btc.json         BTC demo config
+config.json             XAU demo config
+mt5_planner/            source code
+agents/gloc/            local agent definitions
+```
+
+## GitHub Pro Use
+
+This repo is pushed to private GitHub as source backup and version history.
+
+Do commit:
+
+- Source code
+- Docs
+- VS Code tasks
+- Config templates and safe configs
+
+Do not commit:
+
+- Discord webhooks
+- API keys or tokens
+- SQLite journals
+- MT5 CSV exports
+- Reports/logs/backups
+- Guard runtime files
+
+## Install
+
+Use the project Python environment or install requirements:
 
 ```powershell
 py -m pip install -r requirements.txt
 ```
 
-## ตั้งค่า
-
-แก้ไฟล์ `config.example.json` แล้ว save เป็น `config.json`
-
-สำคัญ:
-
-- `symbol`: ชื่อ symbol ใน broker เช่น `XAUUSD`, `XAUUSDm`, `USOIL`, `XTIUSD`
-- `timeframe`: `M1`, `M5`, `M15`, `H1`
-- `risk_per_trade`: เริ่ม `0.0025` ถึง `0.005`
-
-## รัน
+For the Discord bot:
 
 ```powershell
-python -m mt5_planner run --config config.json
+py -m pip install -r requirements-discord-bot.txt
 ```
 
-โหมดนี้จะ:
+## MT5 Exporter
 
-1. ดึง candle ล่าสุด
-2. วิเคราะห์ signal
-3. พิมพ์แผน 3 แบบ
-4. บันทึกลง `journal.sqlite`
+If direct MetaTrader5 Python access is unavailable, use the EA exporter:
 
-## ถ้าติดตั้ง Python package `MetaTrader5` ไม่ได้
-
-ใช้ EA exporter แทน:
-
-1. เปิด MetaEditor
-2. สร้าง Expert Advisor ชื่อ `ChartDataExporter`
-3. วางโค้ดจาก `mt5_exporter/ChartDataExporter.mq5`
-4. Compile
-5. Attach EA กับกราฟ `XAUUSDm`
-6. ตั้ง `FileName = xauusdm_m5.csv`
-7. เปิด `File > Open Data Folder > MQL5 > Files`
-8. copy path ของไฟล์ CSV มาใส่ `csv_path` ใน `config.json`
-
-แล้วรัน:
-
-```powershell
-python -m mt5_planner csv --config config.json
+```text
+mt5_exporter/ChartDataExporter.mq5
+mt5_exporter/ChartDataExporter_BTCUSDm.mq5
 ```
 
-หรือใช้ script live สำหรับเครื่องนี้:
+Attach the EA to the correct MT5 chart and export:
 
-```powershell
-.\run_xauusdm_live.ps1
+```text
+BTCUSDm M5 -> btcusdm_m5.csv
+XAUUSDm M5 -> xauusdm_m5.csv
 ```
 
-ดู signal ล่าสุด:
+## Development Rule
 
-```powershell
-python -m mt5_planner history --config config.json --limit 20
-```
-
-## ทดสอบ logic แบบไม่ใช้ MT5
-
-```powershell
-python -m mt5_planner demo
-```
-
-## Roadmap
-
-1. ทำ data collector ให้เก็บ M1/M5/M15/H1 ต่อเนื่อง
-2. เพิ่ม dashboard
-3. เพิ่ม paper/demo execution
-4. เก็บผล `MFE/MAE`
-5. ทำ ML confidence scoring
+Do not create a second execution path. Any future order, close, modify, TP1, or break-even action must go through Vloc / `mt5_planner/demo_executor.py`.
