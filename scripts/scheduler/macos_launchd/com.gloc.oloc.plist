@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.gloc.oloc</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-lc</string>
+    <string>cd "/path/to/New project 2" &amp;&amp; python -m mt5_planner agent-run-loop --agent oloc --config config_btc.json --config config.json --interval 60</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/tmp/gloc-oloc.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/gloc-oloc.err</string>
+</dict>
+</plist>

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "mode": "local-first",
+  "shared_memory": [
+    "PROJECT_STATE.md",
+    "PROJECT_MEMORY.md",
+    "AI_RUNBOOK.md",
+    "SOUL.md",
+    "AGENT_RULES.md",
+    "TRADE_LESSONS.md"
+  ],
+  "agents": {
+    "gloc": {
+      "name": "Gloc Analyst",
+      "prompt": "agents/gloc/prompts/gloc_analyst.prompt.md",
+      "allowed_actions": ["status", "report"],
+      "blocked_actions": ["order"]
+    },
+    "kloc": {
+      "name": "Kloc Journal",
+      "prompt": "agents/gloc/prompts/kloc_journal.prompt.md",
+      "allowed_actions": ["status", "report"],
+      "blocked_actions": ["order"]
+    },
+    "rloc": {
+      "name": "Rloc Reporter",
+      "prompt": "agents/gloc/prompts/rloc_reporter.prompt.md",
+      "allowed_actions": ["status", "report", "daily", "resend-latest"],
+      "blocked_actions": ["order"]
+    },
+    "oloc": {
+      "name": "Oloc Scheduler",
+      "prompt": "agents/gloc/prompts/oloc_scheduler.prompt.md",
+      "allowed_actions": ["status", "safe-automation", "save-state", "backup"],
+      "blocked_actions": ["order"]
+    },
+    "vloc": {
+      "name": "Vloc Executor",
+      "prompt": "agents/gloc/prompts/vloc_executor.prompt.md",
+      "allowed_actions": ["execution-status"],
+      "blocked_actions": ["order", "enable-execution", "close-position", "modify-position"]
+    }
+  }
+}

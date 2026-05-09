@@ -1,0 +1,274 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "01 Gloc BTC Live",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "live"],
+      "group": "build",
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "02 Gloc XAU Live Weekdays",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "xau", "-Action", "live"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "03 Gloc Dashboard Live",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "dashboard-live"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "04 Gloc Safe Automation",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "safe-automation"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "05 Gloc Report All",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "report"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "06 Gloc Daily Summary All",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "daily"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "07 Gloc Execution Status",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "execution"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "08 Gloc Dashboard Open",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "dashboard-open"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "09 Gloc Resend Latest Signal",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "resend-latest"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "10 Gloc Scheduler Status",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\status_windows_tasks.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "11 Gloc Install Scheduler",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\install_windows_tasks.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "12 Gloc Uninstall Scheduler",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\uninstall_windows_tasks.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "13 Gloc Startup Agents Status",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\status_startup_agents.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "14 Gloc Install Startup Agents",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\install_startup_agents.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "15 Gloc Uninstall Startup Agents",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\scripts\\scheduler\\uninstall_startup_agents.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "16 Gloc Discord Bot Run",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\START_DISCORD_BOT.ps1"],
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Backup",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "backup"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Save Project State",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "save-state"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Test Discord",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "test-discord"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Discord Bot Dry Reply",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "discord-reply", "-Message", "/status"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden BTC Manual List",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "manual-list"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden XAU Manual List",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "xau", "-Action", "manual-list"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Guard Lock All",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "lock"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden Guard Unlock All",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "all", "-Action", "unlock"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden BTC Backtest+Analyze",
+      "dependsOrder": "sequence",
+      "dependsOn": ["99 Hidden BTC Backtest", "99 Hidden BTC Analyze"],
+      "hide": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden XAU Backtest+Analyze",
+      "dependsOrder": "sequence",
+      "dependsOn": ["99 Hidden XAU Backtest", "99 Hidden XAU Analyze"],
+      "hide": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden BTC Once",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "once"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden XAU Once",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "xau", "-Action", "once"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden BTC Backtest",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "backtest"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden BTC Analyze",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "btc", "-Action", "analyze"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": false},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden XAU Backtest",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "xau", "-Action", "backtest"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": true},
+      "problemMatcher": []
+    },
+    {
+      "label": "99 Hidden XAU Analyze",
+      "type": "shell",
+      "command": "powershell",
+      "args": ["-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}\\MT5_PLANNER.ps1", "-Symbol", "xau", "-Action", "analyze"],
+      "hide": true,
+      "presentation": {"reveal": "always", "panel": "dedicated", "clear": false},
+      "problemMatcher": []
+    }
+  ]
+}

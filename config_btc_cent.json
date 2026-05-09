@@ -1,0 +1,14 @@
+{
+  "extends": "config_btc.json",
+  "account_type": "real_cent",
+  "account_equity": 100,
+  "account_currency": "USC",
+  "journal_path": "journal_btc_cent.sqlite",
+  "risk_guard": {
+    "max_actual_risk_usd": 5,
+    "max_actual_risk_pct": 0.05
+  },
+  "report": {
+    "forward_start": "2026-05-09T00:00:00+00:00"
+  }
+}

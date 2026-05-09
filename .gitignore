@@ -1,0 +1,48 @@
+DISCORD_WEBHOOK.local.ps1
+*.local.ps1
+backups/
+reports/alerts.log
+reports/latest_signal.txt
+
+# Secrets / local machine settings
+.env
+.env.*
+*.secret.*
+*TOKEN*
+*token*
+*WEBHOOK*
+*webhook*
+!DISCORD_ALERT_SETUP.md
+!DISCORD_BOT_SETUP.md
+!DISCORD_CHANNEL_SETUP.md
+!DISCORD_BOT_ROADMAP.md
+
+# Runtime data
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.log
+*.pid
+reports/
+!reports/.gitkeep
+agents/gloc/logs/
+agents/gloc/queue/*.jsonl
+
+# Market/export/generated data
+*.csv
+!*.example.csv
+datasets/*.csv
+mt5_exporter/*.csv
+
+# Python / local dependencies
+__pycache__/
+*.py[cod]
+.venv/
+.deps/
+.tmp/
+.pytest_cache/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

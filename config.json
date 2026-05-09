@@ -1,0 +1,128 @@
+{
+  "symbol": "XAUUSDm",
+  "timeframe": "M5",
+  "bars": 10000,
+  "poll_seconds": 10,
+  "risk_per_trade": 0.005,
+  "account_equity": 1000,
+  "account_currency": "USD",
+  "position_sizing": {
+    "contract_size": 100,
+    "fixed_lot": 0.01,
+    "min_lot": 0.01,
+    "max_lot": 1.0,
+    "lot_step": 0.01
+  },
+  "risk_guard": {
+    "max_actual_risk_usd": 20,
+    "max_actual_risk_pct": 0.2
+  },
+  "alerts": {
+    "enabled": true,
+    "beep": true,
+    "print": true,
+    "dir": "reports",
+    "discord": {
+      "enabled": true,
+      "webhook_url": "",
+      "webhooks": {
+        "signals": "",
+        "reports": "",
+        "ops": ""
+      }
+    }
+  },
+  "execution": {
+    "enabled": false,
+    "mode": "manual_only",
+    "demo_only": true,
+    "max_open_trades": 1,
+    "daily_max_loss_usd": 20,
+    "duplicate_guard": true,
+    "emergency_stop": true
+  },
+  "spread_filter": {
+    "max_spread_price": 0.8
+  },
+  "quality_filter": {
+    "min_score": 65
+  },
+  "backtest": {
+    "min_bars": 300,
+    "max_hold_bars": 48
+  },
+  "report": {
+    "forward_start": "2026-05-09T00:00:00+00:00"
+  },
+  "session_profiles": {
+    "Asia": {
+      "target_rr_mult": 0.8,
+      "sl_atr_mult": 0.9,
+      "max_hold_bars": 24,
+      "tp1_rr": 0.8,
+      "move_be_at_rr": 0.8
+    },
+    "London AM": {
+      "target_rr_mult": 0.9,
+      "sl_atr_mult": 1.0,
+      "max_hold_bars": 36,
+      "tp1_rr": 0.9,
+      "move_be_at_rr": 0.9
+    },
+    "London/NY": {
+      "target_rr_mult": 1.0,
+      "sl_atr_mult": 1.0,
+      "max_hold_bars": 48,
+      "tp1_rr": 1.0,
+      "move_be_at_rr": 1.0
+    },
+    "NY": {
+      "target_rr_mult": 0.75,
+      "sl_atr_mult": 0.9,
+      "max_hold_bars": 24,
+      "tp1_rr": 0.75,
+      "move_be_at_rr": 0.75
+    }
+  },
+  "journal_path": "journal_xau_current.sqlite",
+  "csv_path": "xauusdm_m5.csv",
+  "strategy": {
+    "ema_fast": 50,
+    "ema_slow": 200,
+    "rsi_period": 14,
+    "atr_period": 14,
+    "min_rr": 1.5,
+    "direction_method": "structure",
+    "require_setup_confirmation": true,
+    "base_window": 18,
+    "base_max_range_atr": 3.0,
+    "vcp_fast_window": 8,
+    "vcp_slow_window": 24,
+    "vcp_threshold": 0.75,
+    "breakout_window": 20,
+    "breakout_buffer_atr": 0.05,
+    "retest_tolerance_atr": 0.25,
+    "allow_smc_confirmation": true,
+    "allow_pullback_confirmation": true,
+    "max_chase_position": 0.82,
+    "min_short_chase_position": 0.18,
+    "valid_for_bars": 2,
+    "filter_low_edge_setups": true,
+    "high_edge_setup_tokens": ["vcp", "retest", "breakout", "sweep_", "wyckoff", "choch"],
+    "setup_allowlist": [
+      "vcp+bos_down+fibo_golden",
+      "vcp+bos_down+fibo_golden+scalp_momentum",
+      "vcp+bos_up+fibo_breakout",
+      "flat_base+vcp+fibo_golden+scalp_momentum",
+      "retest+scalp_momentum",
+      "sweep_",
+      "wyckoff",
+      "choch"
+    ],
+    "setup_denylist": [
+      "fibo_golden+pullback_fibo",
+      "flat_base+fibo_golden+pullback_fibo"
+    ],
+    "enabled_modes": ["safe"]
+  }
+}

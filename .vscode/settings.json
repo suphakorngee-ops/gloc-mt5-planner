@@ -1,0 +1,5 @@
+{
+  "python.defaultInterpreterPath": "C:\\Users\\jiasny\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+  "python.terminal.activateEnvironment": false,
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}
