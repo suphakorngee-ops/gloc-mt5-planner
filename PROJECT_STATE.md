@@ -1,12 +1,13 @@
 # MT5 Planner Project State
 
-saved_at: 2026-05-11T00:13:01
+saved_at: 2026-05-11T00:19:23
 
 ## Current Mode
 
 - Forward tracking remains enabled
 - BTC demo auto execution may be ON if `config_btc.json` says enabled
-- XAU execution remains OFF unless explicitly changed
+- XAU demo auto execution may be ON if `config.json` says enabled
+- BTC and XAU each use independent max_open_trades per symbol
 - Fixed lot 0.01
 - Clean current journals
 
@@ -91,13 +92,13 @@ ACTUAL MT5 ORDER LEDGER
 symbol: BTCUSDm | ledger: orders_btcusdm_current.sqlite
 start_at: 2026-05-09T00:00:00+00:00
 orders: 2 | closed 1 | open 1 | wins 1 | losses 0 | be 0 | WR 100.0%
-closed P/L: $3.03 | open P/L: $-1.33 | marked total: $1.70
+closed P/L: $3.03 | open P/L: $-0.69 | marked total: $2.34
 gross win $3.03 | gross loss $0.00 | PF inf
 
 RECENT MT5 ORDERS
     position side  status     vol      entry         sl         tp       p/l
   1917700232 BUY   closed    0.01  81045.020      0.000      0.000      3.03
-  1917830363 BUY   open      0.01  81398.530  80938.720  81933.640     -1.33
+  1917830363 BUY   open      0.01  81398.530  80938.720  81933.640     -0.69
 ```
 
 ## XAUUSDm M5
@@ -106,7 +107,7 @@ RECENT MT5 ORDERS
 - journal: journal_xau_current.sqlite
 - csv: xauusdm_m5.csv
 - fixed_lot: 0.01
-- execution_enabled: False
+- execution_enabled: True
 
 ```text
 FORWARD TEST REPORT
@@ -152,7 +153,7 @@ run order-sync while MT5 is open
 
 1. Keep `LIVE 01 / BTC Demo Auto` running while BTC feed is active.
 2. Use `LIVE 02 / XAU Weekdays` only when the gold market is open.
-3. Use `EXEC 04 / Order Ledger All` to check actual MT5 P/L.
-4. Use `OPS 01 / Safe Automation` for report, daily, order ledger, save-state, backup, and Discord digest.
-5. Keep BTC auto execution demo-only with fixed lot 0.01 and guards.
-6. Keep XAU execution disabled until enough weekday forward data exists.
+3. Use `OPS 00 / Health Check` after opening the PC/MT5.
+4. Use `EXEC 04 / Order Ledger All` to check actual MT5 P/L.
+5. Use `OPS 01 / Safe Automation` for report, daily, order ledger, save-state, backup, and Discord digest.
+6. Keep BTC/XAU auto execution demo-only with fixed lot 0.01 and guards.

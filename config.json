@@ -30,20 +30,21 @@
       "webhooks": {
         "signals": "",
         "reports": "",
-        "ops": ""
+        "ops": "",
+        "chat": ""
       }
     }
   },
   "execution": {
-    "enabled": false,
+    "enabled": true,
     "mode": "demo_auto",
-    "dry_run": true,
+    "dry_run": false,
     "demo_only": true,
     "max_open_trades": 1,
     "daily_max_loss_usd": 20,
     "duplicate_guard": true,
     "emergency_stop": true,
-    "manage_positions": false,
+    "manage_positions": true,
     "tp1_rr": 1.0,
     "move_be_at_rr": 1.0,
     "partial_close_ratio": 0.5,

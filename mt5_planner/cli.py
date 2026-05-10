@@ -35,6 +35,7 @@ from .agent_runtime import agent_status, enqueue_task, run_agent_loop, run_agent
 from .demo_executor import execute_latest_signal, execute_saved_plans
 from .trade_manager import manage_demo_positions
 from .order_ledger import build_order_report, sync_order_ledger
+from .health_check import build_health_check
 
 
 def load_config(path: str) -> dict:
@@ -545,6 +546,15 @@ def command_discord_reply(args: argparse.Namespace) -> None:
     print(build_discord_reply(args.message, configs))
 
 
+def command_health(args: argparse.Namespace) -> None:
+    configs = []
+    for config_path in args.config:
+        config = load_config(config_path)
+        config["_path"] = config_path
+        configs.append(config)
+    print(build_health_check(configs))
+
+
 def command_agent_status(_: argparse.Namespace) -> None:
     print(agent_status())
 
@@ -770,6 +780,10 @@ def main() -> None:
     discord_reply_parser.add_argument("--config", action="append", default=[])
     discord_reply_parser.add_argument("--message", required=True)
     discord_reply_parser.set_defaults(func=command_discord_reply)
+
+    health_parser = sub.add_parser("health")
+    health_parser.add_argument("--config", action="append", default=[])
+    health_parser.set_defaults(func=command_health)
 
     agent_status_parser = sub.add_parser("agent-status")
     agent_status_parser.set_defaults(func=command_agent_status)

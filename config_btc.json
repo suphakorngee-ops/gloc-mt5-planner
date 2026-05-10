@@ -30,7 +30,8 @@
       "webhooks": {
         "signals": "",
         "reports": "",
-        "ops": ""
+        "ops": "",
+        "chat": ""
       }
     }
   },

@@ -5,6 +5,7 @@
 ```text
 LIVE 01 / BTC Demo Auto
 LIVE 02 / XAU Weekdays
+OPS 00 / Health Check
 DASH 01 / Live View
 OPS 01 / Safe Automation
 REPORT 01 / Forward All

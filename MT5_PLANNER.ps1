@@ -5,7 +5,7 @@ param(
     [ValidateSet("demo", "cent")]
     [string]$Account = "demo",
 
-    [ValidateSet("live", "once", "report", "daily", "dashboard", "dashboard-open", "dashboard-live", "execution", "execution-dry-run", "execution-manage", "order-sync", "order-report", "lock", "unlock", "manual-list", "backup", "save-state", "safe-automation", "discord-reply", "test-discord", "resend-latest", "track", "stats", "check", "backtest", "analyze")]
+    [ValidateSet("live", "once", "report", "daily", "dashboard", "dashboard-open", "dashboard-live", "execution", "execution-dry-run", "execution-manage", "order-sync", "order-report", "health", "lock", "unlock", "manual-list", "backup", "save-state", "safe-automation", "discord-reply", "test-discord", "resend-latest", "track", "stats", "check", "backtest", "analyze")]
     [string]$Action = "live",
 
     [string]$Message = "/status",
@@ -111,6 +111,10 @@ if ($Symbol -eq "all") {
             & $Python -m mt5_planner order-report --config config.json --sync
             exit
         }
+        "health" {
+            & $Python -m mt5_planner health --config config_btc.json --config config.json
+            exit
+        }
         "lock" {
             & $Python -m mt5_planner execution-lock --config config_btc.json --reason "manual all lock"
             & $Python -m mt5_planner execution-lock --config config.json --reason "manual all lock"
@@ -146,7 +150,7 @@ if ($Symbol -eq "all") {
             exit
         }
         default {
-            throw "Symbol all supports only report, daily, dashboard, dashboard-open, dashboard-live, execution, execution-dry-run, execution-manage, order-sync, order-report, lock, unlock, backup, save-state, safe-automation, discord-reply, test-discord, resend-latest."
+            throw "Symbol all supports only report, daily, dashboard, dashboard-open, dashboard-live, execution, execution-dry-run, execution-manage, order-sync, order-report, health, lock, unlock, backup, save-state, safe-automation, discord-reply, test-discord, resend-latest."
         }
     }
 }
@@ -222,6 +226,9 @@ switch ($Action) {
     }
     "order-report" {
         & $Python -m mt5_planner order-report --config $Config --sync
+    }
+    "health" {
+        & $Python -m mt5_planner health --config $Config
     }
     "lock" {
         & $Python -m mt5_planner execution-lock --config $Config --reason "manual lock"

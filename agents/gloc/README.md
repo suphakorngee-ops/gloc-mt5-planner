@@ -4,7 +4,7 @@ This folder documents the local agent roles for Gloc MT5 Planner.
 
 ```text
 Gloc Analyst   = reads chart/CSV and creates a signal or NO TRADE
-Vloc Executor  = the only BTC demo order gateway; XAU remains OFF
+Vloc Executor  = the only BTC/XAU demo order gateway
 Kloc Journal   = records signals, paper results, manual marks, and lessons
 Rloc Reporter  = Discord, reports, dashboard, backup, order ledger summaries
 Oloc Scheduler = wakes local reporting/backup/status jobs
@@ -14,7 +14,7 @@ Oloc Scheduler = wakes local reporting/backup/status jobs
 
 ```text
 Gloc Analyst   = active
-Vloc Executor  = BTC demo auto ON with guards / XAU OFF
+Vloc Executor  = BTC demo auto ON / XAU demo auto ON during open gold sessions
 Kloc Journal   = active
 Rloc Reporter  = active through reports, dashboard, Discord routes, backups
 Oloc Scheduler = local task/startup helper, not a full server bot yet
@@ -24,8 +24,8 @@ Oloc Scheduler = local task/startup helper, not a full server bot yet
 
 - Vloc is the only allowed order gateway.
 - Do not add a second order sender.
-- BTC demo auto must keep `demo_only`, `max_open_trades`, daily loss, duplicate, and emergency guards.
-- XAU execution stays OFF unless the user explicitly asks.
+- BTC/XAU demo auto must keep `demo_only`, `max_open_trades`, daily loss, duplicate, and emergency guards.
+- BTC and XAU each use independent `max_open_trades = 1`.
 - Discord chat/Q&A must stay read-only; no order commands.
 - Actual MT5 order P/L belongs in the order ledger, not the paper signal journal.
 

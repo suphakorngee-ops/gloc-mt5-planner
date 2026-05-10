@@ -7,7 +7,7 @@ Gloc is built to read MT5 chart data, create guarded trade plans, journal every 
 ## Current Mode
 
 - BTCUSDm M5: demo auto execution is enabled.
-- XAUUSDm M5: execution is OFF.
+- XAUUSDm M5: demo auto execution is enabled for weekday gold sessions.
 - Fixed lot: `0.01`.
 - BTC execution is demo-only and must pass Vloc guards.
 - GitHub is used for private source backup, not for secrets or live trading data.
@@ -28,8 +28,8 @@ MT5 EA exporter
 ## Safety Rules
 
 - Only Vloc may send orders.
-- BTC orders are demo-only.
-- XAU orders are disabled.
+- BTC/XAU orders are demo-only.
+- BTC and XAU each have their own `max_open_trades = 1`, so they can each hold one Vloc position at the same time.
 - No Discord chat command may send, close, or modify an order.
 - Webhooks, journals, live CSV files, logs, reports, backups, and guard files stay local only.
 
@@ -100,6 +100,7 @@ Use `Terminal > Run Task...`.
 ```text
 LIVE 01 / BTC Demo Auto              run BTC planner and BTC demo executor
 LIVE 02 / XAU Weekdays               run XAU planner only when gold market is open
+OPS 00 / Health Check                one-page MT5/CSV/Discord/order-ledger status
 EXEC 01 / Status All                 confirm BTC/XAU execution state
 EXEC 02 / BTC Manage Position        run BTC order manager once
 EXEC 03 / BTC Dry Run                validate latest BTC signal without order
@@ -117,6 +118,8 @@ DASH 02 / Open Static                static dashboard file
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action live
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol xau -Action live
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action health
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action execution
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-dry-run
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-manage

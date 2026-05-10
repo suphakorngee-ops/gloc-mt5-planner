@@ -141,6 +141,29 @@
                                          ]
                   },
                   {
+                      "label":  "OPS 00 / Health Check",
+                      "type":  "shell",
+                      "command":  "powershell",
+                      "args":  [
+                                   "-ExecutionPolicy",
+                                   "Bypass",
+                                   "-File",
+                                   "${workspaceFolder}\\MT5_PLANNER.ps1",
+                                   "-Symbol",
+                                   "all",
+                                   "-Action",
+                                   "health"
+                               ],
+                      "presentation":  {
+                                           "reveal":  "always",
+                                           "panel":  "dedicated",
+                                           "clear":  true
+                                       },
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
                       "label":  "REPORT 01 / Forward All",
                       "type":  "shell",
                       "command":  "powershell",

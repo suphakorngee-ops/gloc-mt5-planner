@@ -16,7 +16,8 @@
 
 - Product is local/free MT5 planner.
 - BTC demo auto execution is enabled through Vloc only.
-- XAU execution remains OFF.
+- XAU demo auto execution is enabled through Vloc only during open gold market sessions.
+- BTC and XAU each use `max_open_trades = 1`, so one BTC and one XAU position can coexist.
 - Live mode is forward test / paper signal.
 - Logic currently uses structure/SMC style direction, not EMA gate.
 - Fixed lot is `0.01`.

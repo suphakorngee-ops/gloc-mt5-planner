@@ -500,7 +500,8 @@ Important:
 - Vloc Executor is now the only order gateway through `mt5_planner/demo_executor.py`.
 - BTC demo auto execution is enabled with `demo_only=true`, `dry_run=false`, fixed lot `0.01`, max open trades `1`, daily max loss `$5`, duplicate guard, and Discord ops alert.
 - BTC order lifecycle manager added in `mt5_planner/trade_manager.py`; it manages Gloc magic-number positions, attempts TP1 partial close if volume allows, and moves SL to BE at +1R. With 0.01 lot, partial close usually skips because it is already min lot.
-- XAU execution remains OFF.
+- XAU demo auto execution is enabled for weekday/open gold market sessions.
+- BTC and XAU each use independent `max_open_trades = 1`, so they can run one Vloc position per symbol at the same time.
 - Do not add any other order sender outside Vloc/demo_executor or position manager outside trade_manager.
 - Local-first real agent runtime started:
   - `SOUL.md`, `AGENT_RULES.md`, `TRADE_LESSONS.md`

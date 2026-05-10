@@ -6,7 +6,8 @@ Visible VSCode tasks are now simplified:
 
 ```text
 LIVE 01 / BTC Demo Auto       = BTC forward test + BTC demo executor
-LIVE 02 / XAU Weekdays        = XAU forward test when gold market is open
+LIVE 02 / XAU Weekdays        = XAU forward test + XAU demo executor when gold market is open
+OPS 00 / Health Check         = one-page readiness check
 EXEC 01 / Status All          = confirm BTC demo / XAU execution state
 EXEC 02 / BTC Manage Position = manage open BTC demo position once
 EXEC 03 / BTC Dry Run         = validate latest BTC signal without order
@@ -17,7 +18,7 @@ OPS 01 / Safe Automation      = report + daily + save-state + backup + Discord d
 DASH 01 / Live View           = local dashboard server
 ```
 
-XAUUSD/gold is normally closed on Saturday and Sunday. On weekends, use BTC live/report instead and leave XAU live off.
+XAUUSD/gold is normally closed on Saturday and Sunday. On weekdays, BTC and XAU can run together. Each symbol is limited to one Vloc order by its own `max_open_trades = 1`.
 
 Old `.bat` launchers were moved to `scripts/legacy_launchers/` to keep the root folder clean. Use `START_HERE.bat`, `MT5_PLANNER.ps1`, or the visible VSCode tasks for normal work.
 
