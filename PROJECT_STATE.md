@@ -1,6 +1,6 @@
 # MT5 Planner Project State
 
-saved_at: 2026-05-11T00:19:23
+saved_at: 2026-05-11T00:22:53
 
 ## Current Mode
 
@@ -92,13 +92,13 @@ ACTUAL MT5 ORDER LEDGER
 symbol: BTCUSDm | ledger: orders_btcusdm_current.sqlite
 start_at: 2026-05-09T00:00:00+00:00
 orders: 2 | closed 1 | open 1 | wins 1 | losses 0 | be 0 | WR 100.0%
-closed P/L: $3.03 | open P/L: $-0.69 | marked total: $2.34
+closed P/L: $3.03 | open P/L: $-0.16 | marked total: $2.87
 gross win $3.03 | gross loss $0.00 | PF inf
 
 RECENT MT5 ORDERS
     position side  status     vol      entry         sl         tp       p/l
   1917700232 BUY   closed    0.01  81045.020      0.000      0.000      3.03
-  1917830363 BUY   open      0.01  81398.530  80938.720  81933.640     -0.69
+  1917830363 BUY   open      0.01  81398.530  80938.720  81933.640     -0.16
 ```
 
 ## XAUUSDm M5
@@ -151,8 +151,8 @@ run order-sync while MT5 is open
 
 ## Next Recommended Actions
 
-1. Keep `LIVE 01 / BTC Demo Auto` running while BTC feed is active.
-2. Use `LIVE 02 / XAU Weekdays` only when the gold market is open.
+1. Use `LIVE 00 / BTC + XAU Demo Auto` when both markets should run together.
+2. Use `LIVE 01 / BTC Demo Auto` or `LIVE 02 / XAU Weekdays` when running one market only.
 3. Use `OPS 00 / Health Check` after opening the PC/MT5.
 4. Use `EXEC 04 / Order Ledger All` to check actual MT5 P/L.
 5. Use `OPS 01 / Safe Automation` for report, daily, order ledger, save-state, backup, and Discord digest.

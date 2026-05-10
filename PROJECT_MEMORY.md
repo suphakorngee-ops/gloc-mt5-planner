@@ -377,6 +377,7 @@ Then rerun:
 
 - VSCode task picker simplified:
   - visible tasks are grouped by prefix: `LIVE`, `EXEC`, `REPORT`, `OPS`, `DISCORD`, `DASH`, `AGENT`, `SCHED`
+  - `LIVE 00 / BTC + XAU Demo Auto` starts BTC and XAU live loops in separate tasks
   - helper tasks remain in `.vscode/tasks.json` but are hidden
   - XAU task is named `LIVE 02 / XAU Weekdays` because gold is normally closed on Saturday/Sunday
 - Old root `.bat` launchers moved to `scripts/legacy_launchers/`; keep `START_HERE.bat` and `MT5_PLANNER.ps1` as main entrypoints.

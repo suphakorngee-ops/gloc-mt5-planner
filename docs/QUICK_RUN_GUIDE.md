@@ -3,6 +3,7 @@
 ## Simplified VSCode Tasks
 
 ```text
+LIVE 00 / BTC + XAU Demo Auto
 LIVE 01 / BTC Demo Auto
 LIVE 02 / XAU Weekdays
 OPS 00 / Health Check

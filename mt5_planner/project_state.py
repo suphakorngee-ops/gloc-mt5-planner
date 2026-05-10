@@ -49,8 +49,8 @@ def save_project_state(configs: list[dict], output: str = "PROJECT_STATE.md") ->
 
     lines.append("## Next Recommended Actions")
     lines.append("")
-    lines.append("1. Keep `LIVE 01 / BTC Demo Auto` running while BTC feed is active.")
-    lines.append("2. Use `LIVE 02 / XAU Weekdays` only when the gold market is open.")
+    lines.append("1. Use `LIVE 00 / BTC + XAU Demo Auto` when both markets should run together.")
+    lines.append("2. Use `LIVE 01 / BTC Demo Auto` or `LIVE 02 / XAU Weekdays` when running one market only.")
     lines.append("3. Use `OPS 00 / Health Check` after opening the PC/MT5.")
     lines.append("4. Use `EXEC 04 / Order Ledger All` to check actual MT5 P/L.")
     lines.append("5. Use `OPS 01 / Safe Automation` for report, daily, order ledger, save-state, backup, and Discord digest.")

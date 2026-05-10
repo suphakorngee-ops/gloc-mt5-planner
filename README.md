@@ -98,12 +98,13 @@ These numbers are forward-test data and can change as more signals are collected
 Use `Terminal > Run Task...`.
 
 ```text
+LIVE 00 / BTC + XAU Demo Auto        start both live loops in separate tasks
 LIVE 01 / BTC Demo Auto              run BTC planner and BTC demo executor
-LIVE 02 / XAU Weekdays               run XAU planner only when gold market is open
+LIVE 02 / XAU Weekdays               run XAU planner and XAU demo executor when gold is open
 OPS 00 / Health Check                one-page MT5/CSV/Discord/order-ledger status
 EXEC 01 / Status All                 confirm BTC/XAU execution state
-EXEC 02 / BTC Manage Position        run BTC order manager once
-EXEC 03 / BTC Dry Run                validate latest BTC signal without order
+EXEC 02 / Manage Positions All       run BTC/XAU order managers once
+EXEC 03 / Dry Run All                validate latest BTC/XAU signal without order
 EXEC 04 / Order Ledger All           sync and report actual MT5 orders
 REPORT 01 / Forward All              forward report
 REPORT 02 / Daily All                daily summary

@@ -5,12 +5,13 @@
 Visible VSCode tasks are now simplified:
 
 ```text
+LIVE 00 / BTC + XAU Demo Auto = start both live loops in separate tasks
 LIVE 01 / BTC Demo Auto       = BTC forward test + BTC demo executor
 LIVE 02 / XAU Weekdays        = XAU forward test + XAU demo executor when gold market is open
 OPS 00 / Health Check         = one-page readiness check
 EXEC 01 / Status All          = confirm BTC demo / XAU execution state
-EXEC 02 / BTC Manage Position = manage open BTC demo position once
-EXEC 03 / BTC Dry Run         = validate latest BTC signal without order
+EXEC 02 / Manage Positions All= manage open BTC/XAU demo positions once
+EXEC 03 / Dry Run All         = validate latest BTC/XAU signal without order
 EXEC 04 / Order Ledger All    = sync/report actual MT5 orders and P/L
 REPORT 01 / Forward All       = forward progress report
 REPORT 02 / Daily All         = daily summary files

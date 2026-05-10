@@ -32,11 +32,12 @@
 Current visible VSCode tasks:
 
 ```text
+LIVE 00 / BTC + XAU Demo Auto
 LIVE 01 / BTC Demo Auto
 LIVE 02 / XAU Weekdays
 EXEC 01 / Status All
-EXEC 02 / BTC Manage Position
-EXEC 03 / BTC Dry Run
+EXEC 02 / Manage Positions All
+EXEC 03 / Dry Run All
 EXEC 04 / Order Ledger All
 REPORT 01 / Forward All
 REPORT 02 / Daily All

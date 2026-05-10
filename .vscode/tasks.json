@@ -2,6 +2,18 @@
     "version":  "2.0.0",
     "tasks":  [
                   {
+                      "label":  "LIVE 00 / BTC + XAU Demo Auto",
+                      "dependsOrder":  "parallel",
+                      "dependsOn":  [
+                                        "LIVE 01 / BTC Demo Auto",
+                                        "LIVE 02 / XAU Weekdays"
+                                    ],
+                      "group":  "build",
+                      "problemMatcher":  [
+
+                                         ]
+                  },
+                  {
                       "label":  "LIVE 01 / BTC Demo Auto",
                       "type":  "shell",
                       "command":  "powershell",
@@ -72,7 +84,7 @@
                                          ]
                   },
                   {
-                      "label":  "EXEC 02 / BTC Manage Position",
+                      "label":  "EXEC 02 / Manage Positions All",
                       "type":  "shell",
                       "command":  "powershell",
                       "args":  [
@@ -81,7 +93,7 @@
                                    "-File",
                                    "${workspaceFolder}\\MT5_PLANNER.ps1",
                                    "-Symbol",
-                                   "btc",
+                                   "all",
                                    "-Action",
                                    "execution-manage"
                                ],
@@ -95,7 +107,7 @@
                                          ]
                   },
                   {
-                      "label":  "EXEC 03 / BTC Dry Run",
+                      "label":  "EXEC 03 / Dry Run All",
                       "type":  "shell",
                       "command":  "powershell",
                       "args":  [
@@ -104,7 +116,7 @@
                                    "-File",
                                    "${workspaceFolder}\\MT5_PLANNER.ps1",
                                    "-Symbol",
-                                   "btc",
+                                   "all",
                                    "-Action",
                                    "execution-dry-run"
                                ],
