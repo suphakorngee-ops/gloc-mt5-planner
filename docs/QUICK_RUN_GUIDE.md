@@ -3,14 +3,15 @@
 ## Simplified VSCode Tasks
 
 ```text
-01 Gloc BTC Live
-02 Gloc XAU Live Weekdays
-03 Gloc Dashboard Live
-04 Gloc Safe Automation
-05 Gloc Report All
-06 Gloc Daily Summary All
-07 Gloc Execution Status
-08 Gloc Dashboard Open
+LIVE 01 / BTC Demo Auto
+LIVE 02 / XAU Weekdays
+DASH 01 / Live View
+OPS 01 / Safe Automation
+REPORT 01 / Forward All
+REPORT 02 / Daily All
+EXEC 01 / Status All
+EXEC 04 / Order Ledger All
+DASH 02 / Open Static
 ```
 
 XAUUSD/gold is normally closed on Saturday and Sunday. On weekends, run BTC tasks only.

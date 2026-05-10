@@ -15,7 +15,8 @@
 ## Current State
 
 - Product is local/free MT5 planner.
-- No auto execution.
+- BTC demo auto execution is enabled through Vloc only.
+- XAU execution remains OFF.
 - Live mode is forward test / paper signal.
 - Logic currently uses structure/SMC style direction, not EMA gate.
 - Fixed lot is `0.01`.
@@ -30,14 +31,17 @@
 Current visible VSCode tasks:
 
 ```text
-01 Gloc BTC Live
-02 Gloc XAU Live Weekdays
-03 Gloc Dashboard Live
-04 Gloc Safe Automation
-05 Gloc Report All
-06 Gloc Daily Summary All
-07 Gloc Execution Status
-08 Gloc Dashboard Open
+LIVE 01 / BTC Demo Auto
+LIVE 02 / XAU Weekdays
+EXEC 01 / Status All
+EXEC 02 / BTC Manage Position
+EXEC 03 / BTC Dry Run
+EXEC 04 / Order Ledger All
+REPORT 01 / Forward All
+REPORT 02 / Daily All
+OPS 01 / Safe Automation
+DASH 01 / Live View
+DASH 02 / Open Static
 ```
 
 XAUUSD/gold is normally closed on Saturday and Sunday. During weekends, prefer BTC forward testing and reports. Do not run XAU live expecting new market data while gold is closed.
@@ -73,7 +77,8 @@ powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Account ce
 
 ## Do Not Do Yet
 
-- Do not enable auto order execution.
+- Do not add a second order sender or bypass Vloc/demo_executor.
+- Do not enable XAU execution unless the user explicitly asks.
 - Do not add more entry logic while collecting forward signals unless user explicitly asks.
 - Do not delete old journals.
 - Do not merge old journal data into current reports.
@@ -176,9 +181,9 @@ demo/cent only flag implemented
   - `reports/alerts.log` stores every alert line
   - `reports/latest_signal.txt` stores the latest saved signal
   - `reports/signal_inbox.txt` stores a persistent inbox of new saved signals
-  - command `resend-latest` and task `09 Gloc Resend Latest Signal` resend latest signal to Discord
-  - Discord format is compact with emoji icons and always says paper/manual only, auto execution OFF
-  - Discord route support: signals/reports/ops webhooks with fallback to `MT5_PLANNER_DISCORD_WEBHOOK`
+  - command `resend-latest` and task `DISCORD 01 / Resend Latest Signal` resend latest signal to Discord
+  - Discord format is compact with emoji icons and reflects the real config state: BTC demo auto ON, XAU execution OFF
+  - Discord route support: signals/reports/ops/chat webhooks with fallback to `MT5_PLANNER_DISCORD_WEBHOOK`
   - setup docs: `docs/DISCORD_CHANNEL_SETUP.md`
 - Agent architecture docs:
   - `AGENT_ARCHITECTURE.md`

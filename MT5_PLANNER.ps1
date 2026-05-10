@@ -5,10 +5,13 @@ param(
     [ValidateSet("demo", "cent")]
     [string]$Account = "demo",
 
-    [ValidateSet("live", "once", "report", "daily", "dashboard", "dashboard-open", "dashboard-live", "execution", "execution-dry-run", "execution-manage", "lock", "unlock", "manual-list", "backup", "save-state", "safe-automation", "discord-reply", "test-discord", "resend-latest", "track", "stats", "check", "backtest", "analyze")]
+    [ValidateSet("live", "once", "report", "daily", "dashboard", "dashboard-open", "dashboard-live", "execution", "execution-dry-run", "execution-manage", "order-sync", "order-report", "lock", "unlock", "manual-list", "backup", "save-state", "safe-automation", "discord-reply", "test-discord", "resend-latest", "track", "stats", "check", "backtest", "analyze")]
     [string]$Action = "live",
 
-    [string]$Message = "/status"
+    [string]$Message = "/status",
+
+    [ValidateSet("signals", "reports", "ops", "chat")]
+    [string]$DiscordRoute = "signals"
 )
 
 $ErrorActionPreference = "Stop"
@@ -92,6 +95,22 @@ if ($Symbol -eq "all") {
             & $Python -m mt5_planner execution-manage --config config.json
             exit
         }
+        "order-sync" {
+            Write-Host "===== BTC ORDER SYNC ====="
+            & $Python -m mt5_planner order-sync --config config_btc.json
+            Write-Host ""
+            Write-Host "===== XAU ORDER SYNC ====="
+            & $Python -m mt5_planner order-sync --config config.json
+            exit
+        }
+        "order-report" {
+            Write-Host "===== BTC ORDER REPORT ====="
+            & $Python -m mt5_planner order-report --config config_btc.json --sync
+            Write-Host ""
+            Write-Host "===== XAU ORDER REPORT ====="
+            & $Python -m mt5_planner order-report --config config.json --sync
+            exit
+        }
         "lock" {
             & $Python -m mt5_planner execution-lock --config config_btc.json --reason "manual all lock"
             & $Python -m mt5_planner execution-lock --config config.json --reason "manual all lock"
@@ -119,7 +138,7 @@ if ($Symbol -eq "all") {
             exit
         }
         "test-discord" {
-            & $Python -m mt5_planner test-discord --config config_btc.json --message "Gloc test alert from MT5 Planner"
+            & $Python -m mt5_planner test-discord --config config_btc.json --route $DiscordRoute --title "GLOC TEST" --status "Discord route test" --message "Route: $DiscordRoute | Gloc MT5 Planner is connected."
             exit
         }
         "resend-latest" {
@@ -127,7 +146,7 @@ if ($Symbol -eq "all") {
             exit
         }
         default {
-            throw "Symbol all supports only report, daily, dashboard, dashboard-open, dashboard-live, execution, execution-dry-run, execution-manage, lock, unlock, backup, save-state, safe-automation, discord-reply, test-discord, resend-latest."
+            throw "Symbol all supports only report, daily, dashboard, dashboard-open, dashboard-live, execution, execution-dry-run, execution-manage, order-sync, order-report, lock, unlock, backup, save-state, safe-automation, discord-reply, test-discord, resend-latest."
         }
     }
 }
@@ -198,6 +217,12 @@ switch ($Action) {
     "execution-manage" {
         & $Python -m mt5_planner execution-manage --config $Config
     }
+    "order-sync" {
+        & $Python -m mt5_planner order-sync --config $Config
+    }
+    "order-report" {
+        & $Python -m mt5_planner order-report --config $Config --sync
+    }
     "lock" {
         & $Python -m mt5_planner execution-lock --config $Config --reason "manual lock"
     }
@@ -220,7 +245,7 @@ switch ($Action) {
         & $Python -m mt5_planner discord-reply --config $Config --message $Message
     }
     "test-discord" {
-        & $Python -m mt5_planner test-discord --config $Config --message "Gloc test alert from MT5 Planner"
+        & $Python -m mt5_planner test-discord --config $Config --route $DiscordRoute --title "GLOC TEST" --status "Discord route test" --message "Route: $DiscordRoute | Gloc MT5 Planner is connected."
     }
     "resend-latest" {
         & $Python -m mt5_planner resend-latest --config $Config

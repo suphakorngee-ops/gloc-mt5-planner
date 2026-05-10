@@ -34,6 +34,7 @@ from .discord_bot import build_discord_reply
 from .agent_runtime import agent_status, enqueue_task, run_agent_loop, run_agent_once
 from .demo_executor import execute_latest_signal, execute_saved_plans
 from .trade_manager import manage_demo_positions
+from .order_ledger import build_order_report, sync_order_ledger
 
 
 def load_config(path: str) -> dict:
@@ -102,6 +103,7 @@ def command_run(args: argparse.Namespace) -> None:
         emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
         print_execution_results(execute_saved_plans(config, saved_plans))
         print_execution_results(manage_demo_positions(config))
+        sync_orders_if_enabled(config)
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -149,6 +151,7 @@ def command_csv(args: argparse.Namespace) -> None:
         emit_signal_alert(config["symbol"], config["timeframe"], saved_plans, saved_count, config)
         print_execution_results(execute_saved_plans(config, saved_plans))
         print_execution_results(manage_demo_positions(config))
+        sync_orders_if_enabled(config)
         if not args.no_clear:
             clear_screen()
         print_report(
@@ -192,6 +195,16 @@ def print_execution_results(results: list[dict]) -> None:
         status = result.get("status", "-")
         reason = result.get("reason", "-")
         print(f"VLOC EXECUTION {status}: {reason}")
+
+
+def sync_orders_if_enabled(config: dict) -> None:
+    execution = config.get("execution", {})
+    if not execution.get("enabled", False):
+        return
+    try:
+        sync_order_ledger(config, start_at=config.get("report", {}).get("forward_start"))
+    except Exception as exc:
+        print(f"VLOC LEDGER sync skipped: {exc}")
 
 
 def track_results(journal: Journal, df) -> int:
@@ -363,7 +376,7 @@ def command_forward_report(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     journal = Journal(config.get("journal_path", "journal.sqlite"))
     start_at = args.start_at or config.get("report", {}).get("forward_start")
-    print(build_forward_report(journal.all_signals(), target_signals=args.target, start_at=start_at))
+    print(build_forward_report(journal.all_signals(), target_signals=args.target, start_at=start_at, config=config))
 
 
 def command_daily_report(args: argparse.Namespace) -> None:
@@ -438,6 +451,21 @@ def command_execution_manage(args: argparse.Namespace) -> None:
         print(json.dumps(result, ensure_ascii=False, indent=2))
 
 
+def command_order_sync(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    start_at = args.start_at or config.get("report", {}).get("forward_start")
+    print(sync_order_ledger(config, start_at=start_at))
+
+
+def command_order_report(args: argparse.Namespace) -> None:
+    config = load_config(args.config)
+    start_at = args.start_at or config.get("report", {}).get("forward_start")
+    if args.sync:
+        print(sync_order_ledger(config, start_at=start_at))
+        print("")
+    print(build_order_report(config, start_at=start_at, limit=args.limit))
+
+
 def command_execution_lock(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     print(set_daily_lock(config, args.reason))
@@ -468,8 +496,14 @@ def command_backup(args: argparse.Namespace) -> None:
 def command_test_discord(args: argparse.Namespace) -> None:
     config = load_config(args.config)
     settings = config.get("alerts", {})
-    send_discord_alert(settings, [args.message])
-    print("discord test sent if webhook is configured")
+    send_discord_alert(
+        settings,
+        [args.message],
+        route=args.route,
+        title=args.title,
+        status_text=args.status,
+    )
+    print(f"discord test sent to {args.route} if webhook is configured")
 
 
 def command_resend_latest(args: argparse.Namespace) -> None:
@@ -683,6 +717,18 @@ def main() -> None:
     execution_manage_parser.add_argument("--config", default="config.json")
     execution_manage_parser.set_defaults(func=command_execution_manage)
 
+    order_sync_parser = sub.add_parser("order-sync")
+    order_sync_parser.add_argument("--config", default="config_btc.json")
+    order_sync_parser.add_argument("--start-at")
+    order_sync_parser.set_defaults(func=command_order_sync)
+
+    order_report_parser = sub.add_parser("order-report")
+    order_report_parser.add_argument("--config", default="config_btc.json")
+    order_report_parser.add_argument("--start-at")
+    order_report_parser.add_argument("--limit", type=int, default=10)
+    order_report_parser.add_argument("--sync", action="store_true")
+    order_report_parser.set_defaults(func=command_order_report)
+
     execution_lock_parser = sub.add_parser("execution-lock")
     execution_lock_parser.add_argument("--config", default="config.json")
     execution_lock_parser.add_argument("--reason", default="manual lock")
@@ -699,6 +745,9 @@ def main() -> None:
     discord_parser = sub.add_parser("test-discord")
     discord_parser.add_argument("--config", default="config_btc.json")
     discord_parser.add_argument("--message", default="Gloc Discord test alert")
+    discord_parser.add_argument("--route", choices=["signals", "reports", "ops", "chat"], default="signals")
+    discord_parser.add_argument("--title", default="GLOC TEST")
+    discord_parser.add_argument("--status", default="Discord route test")
     discord_parser.set_defaults(func=command_test_discord)
 
     resend_parser = sub.add_parser("resend-latest")

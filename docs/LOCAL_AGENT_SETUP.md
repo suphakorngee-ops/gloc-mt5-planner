@@ -89,8 +89,8 @@ powershell -ExecutionPolicy Bypass -File scripts\scheduler\uninstall_windows_tas
 VSCode tasks:
 
 ```text
-10 Gloc Scheduler Status
-11 Gloc Install Scheduler
+SCHED 01 / Windows Status
+SCHED 02 / Install Windows Scheduler
 12 Gloc Uninstall Scheduler
 ```
 

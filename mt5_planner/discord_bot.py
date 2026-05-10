@@ -2,6 +2,7 @@ from .daily_report import build_daily_report
 from .execution import execution_status
 from .forward_report import build_forward_report
 from .journal import Journal
+from .order_ledger import build_order_report
 
 
 HELP_TEXT = """Gloc read-only commands:
@@ -10,6 +11,7 @@ HELP_TEXT = """Gloc read-only commands:
 /daily [btc|xau|all]
 /latest
 /execution-status [btc|xau|all]
+/orders [btc|xau|all]
 /lesson
 
 Order execution commands are intentionally unavailable."""
@@ -36,6 +38,8 @@ def build_discord_reply(message: str, configs: list[dict]) -> str:
         return joined_symbol_reply(configs, target, daily_reply)
     if command in ("/execution-status", "/execution"):
         return joined_symbol_reply(configs, target, execution_reply)
+    if command in ("/orders", "/order-report"):
+        return joined_symbol_reply(configs, target, order_reply)
     if command in ("/lesson", "/lessons"):
         return lesson_reply()
 
@@ -43,15 +47,15 @@ def build_discord_reply(message: str, configs: list[dict]) -> str:
 
 
 def status_reply(configs: list[dict]) -> str:
-    lines = ["Gloc MT5 Planner status", "Auto execution: OFF / manual-paper only"]
+    lines = ["Gloc MT5 Planner status"]
     for config in configs:
         journal = Journal(config.get("journal_path", "journal.sqlite"))
         start_at = config.get("report", {}).get("forward_start")
-        forward = build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at)
+        forward = build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at, config=config)
         picked = [
             line
             for line in forward.splitlines()
-            if line.startswith(("signals:", "progress:", "decision:")) or line == "no forward signals yet"
+            if line.startswith(("raw signals:", "grouped trade ideas:", "execution:", "MT5 today/history:", "progress:", "decision:")) or line == "no forward signals yet"
         ]
         lines.append(f"{config['symbol']} {config['timeframe']}: " + " | ".join(picked[:3]))
     return trim_discord("\n".join(lines))
@@ -67,7 +71,7 @@ def joined_symbol_reply(configs: list[dict], target: str, builder) -> str:
 def forward_reply(config: dict) -> str:
     journal = Journal(config.get("journal_path", "journal.sqlite"))
     start_at = config.get("report", {}).get("forward_start")
-    return build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at)
+    return build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at, config=config)
 
 
 def daily_reply(config: dict) -> str:
@@ -78,6 +82,11 @@ def daily_reply(config: dict) -> str:
 
 def execution_reply(config: dict) -> str:
     return execution_status(config)
+
+
+def order_reply(config: dict) -> str:
+    start_at = config.get("report", {}).get("forward_start")
+    return build_order_report(config, start_at=start_at)
 
 
 def latest_reply() -> str:

@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import json
 
-from .alerts import send_discord_alert
+from .alerts import discord_status_text, send_discord_alert
 from .mt5_runtime import initialize_mt5
 
 
@@ -200,4 +200,10 @@ def notify_manager(config: dict, result: dict) -> None:
         f"{result.get('symbol')} | ticket {result.get('ticket')} | "
         f"status {result.get('status')} | reason {result.get('reason')}"
     )
-    send_discord_alert(settings, [line], route="ops", title="VLOC MANAGER")
+    send_discord_alert(
+        settings,
+        [line],
+        route="ops",
+        title="VLOC MANAGER",
+        status_text=discord_status_text(config),
+    )

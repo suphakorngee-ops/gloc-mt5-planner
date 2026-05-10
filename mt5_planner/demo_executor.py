@@ -6,7 +6,7 @@ import json
 import sqlite3
 
 from .execution import execution_guard_status
-from .alerts import send_discord_alert
+from .alerts import discord_status_text, send_discord_alert
 from .mt5_runtime import initialize_mt5
 
 
@@ -277,13 +277,22 @@ def append_execution_log(result: dict) -> None:
 
 
 def notify_execution(config: dict, result: dict) -> None:
+    reason = str(result.get("reason") or "")
+    if result.get("status") in ("reject", "error") and reason.startswith("max_open_trades reached"):
+        return
     settings = config.get("alerts", {})
     line = (
         f"{result.get('symbol')} {result.get('timeframe')} | {str(result.get('direction')).upper()} | "
         f"status {result.get('status')} | lot {float(result.get('lot') or 0):.2f} | "
-        f"risk ${float(result.get('risk_usd') or 0):.2f} | reason {result.get('reason') or '-'}"
+        f"risk ${float(result.get('risk_usd') or 0):.2f} | reason {reason or '-'}"
     )
-    send_discord_alert(settings, [line], route="ops", title="VLOC EXECUTION")
+    send_discord_alert(
+        settings,
+        [line],
+        route="ops",
+        title="VLOC EXECUTION",
+        status_text=discord_status_text(config),
+    )
 
 
 def base_result(config: dict, plan: dict) -> dict:

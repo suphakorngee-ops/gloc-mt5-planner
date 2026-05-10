@@ -5,15 +5,16 @@
 Visible VSCode tasks are now simplified:
 
 ```text
-01 Gloc BTC Live              = weekend/crypto forward test
-02 Gloc XAU Live Weekdays     = XAU forward test when gold market is open
-03 Gloc Dashboard Live        = local dashboard server
-04 Gloc Safe Automation       = report + daily + save-state + backup + Discord digest
-05 Gloc Report All            = forward progress report
-06 Gloc Daily Summary All     = daily summary files
-07 Gloc Execution Status      = confirm BTC demo / XAU execution state
-08 Gloc Execution Dry Run     = validate latest BTC signal without order
-10 Gloc Execution Manage      = manage open BTC demo position once
+LIVE 01 / BTC Demo Auto       = BTC forward test + BTC demo executor
+LIVE 02 / XAU Weekdays        = XAU forward test when gold market is open
+EXEC 01 / Status All          = confirm BTC demo / XAU execution state
+EXEC 02 / BTC Manage Position = manage open BTC demo position once
+EXEC 03 / BTC Dry Run         = validate latest BTC signal without order
+EXEC 04 / Order Ledger All    = sync/report actual MT5 orders and P/L
+REPORT 01 / Forward All       = forward progress report
+REPORT 02 / Daily All         = daily summary files
+OPS 01 / Safe Automation      = report + daily + save-state + backup + Discord digest
+DASH 01 / Live View           = local dashboard server
 ```
 
 XAUUSD/gold is normally closed on Saturday and Sunday. On weekends, use BTC live/report instead and leave XAU live off.
@@ -22,14 +23,14 @@ Old `.bat` launchers were moved to `scripts/legacy_launchers/` to keep the root 
 
 Forward reports show both raw `signals` and grouped `trade ideas`. The grouped number is better for judging edge because repeated refreshes of the same setup are counted as one idea.
 
-If a Discord/terminal alert is missed, run `09 Gloc Resend Latest Signal`. Every saved alert is also kept in `reports/alerts.log`, and new alerts are appended to `reports/signal_inbox.txt`.
+If a Discord/terminal alert is missed, run `DISCORD 01 / Resend Latest Signal`. Every saved alert is also kept in `reports/alerts.log`, and new alerts are appended to `reports/signal_inbox.txt`.
 
 คู่มือนี้สำหรับคุณ ใช้ตอนเปิดเครื่องแล้วไม่อยากจำขั้นตอนเยอะ
 
 ## ตอนนี้ระบบคืออะไร
 
 - ยังเป็น `FORWARD TEST / PAPER SIGNAL`
-- ยังไม่ส่ง order จริง
+- BTC demo auto ส่ง order ได้ผ่าน Vloc เท่านั้น ส่วน XAU ยัง OFF
 - ถ้ามี signal คุณจะเข้า demo เองก็ได้ หรือไม่เข้าก็ได้
 - ถ้าไม่ทัน ห้ามไล่ราคา ให้ปล่อยระบบ track paper result
 - เป้าหมายตอนนี้คือเก็บ `50-100 signals` ต่อ symbol
@@ -197,9 +198,8 @@ XAU remains OFF.
 Check:
 
 ```text
-MAIN BTC Execution Status
-MAIN XAU Execution Status
-10 Gloc Execution Manage
+EXEC 01 / Status All
+EXEC 02 / BTC Manage Position
 ```
 
 Current BTC status:

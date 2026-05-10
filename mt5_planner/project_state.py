@@ -4,6 +4,7 @@ from pathlib import Path
 from .forward_report import build_forward_report
 from .daily_report import build_daily_report
 from .journal import Journal
+from .order_ledger import build_order_report
 
 
 def save_project_state(configs: list[dict], output: str = "PROJECT_STATE.md") -> str:
@@ -33,20 +34,24 @@ def save_project_state(configs: list[dict], output: str = "PROJECT_STATE.md") ->
         lines.append(f"- execution_enabled: {config.get('execution', {}).get('enabled', False)}")
         lines.append("")
         lines.append("```text")
-        lines.append(build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at))
+        lines.append(build_forward_report(journal.all_signals(), target_signals=50, start_at=start_at, config=config))
         lines.append("```")
         lines.append("")
         lines.append("```text")
         lines.append(build_daily_report(journal.all_signals(), days=7, start_at=start_at))
         lines.append("```")
         lines.append("")
+        lines.append("```text")
+        lines.append(build_order_report(config, start_at=start_at))
+        lines.append("```")
+        lines.append("")
 
     lines.append("## Next Recommended Actions")
     lines.append("")
-    lines.append("1. Keep `01 Gloc BTC Live` running while BTC feed is active.")
-    lines.append("2. Use `02 Gloc XAU Live Weekdays` only when the gold market is open.")
-    lines.append("3. Use `03 Gloc Dashboard Live` for live view and manual marks.")
-    lines.append("4. Use `04 Gloc Safe Automation` for report, daily, save-state, backup, and Discord digest.")
+    lines.append("1. Keep `LIVE 01 / BTC Demo Auto` running while BTC feed is active.")
+    lines.append("2. Use `LIVE 02 / XAU Weekdays` only when the gold market is open.")
+    lines.append("3. Use `EXEC 04 / Order Ledger All` to check actual MT5 P/L.")
+    lines.append("4. Use `OPS 01 / Safe Automation` for report, daily, order ledger, save-state, backup, and Discord digest.")
     lines.append("5. Keep BTC auto execution demo-only with fixed lot 0.01 and guards.")
     lines.append("6. Keep XAU execution disabled until enough weekday forward data exists.")
     lines.append("")

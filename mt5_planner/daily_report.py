@@ -48,7 +48,7 @@ def build_daily_report(rows: list[dict], days: int = 7, start_at: str | None = N
         lines.append("- no forward signals in this period; keep Live running")
     else:
         lines.append("- keep collecting until 50-100 current-logic forward signals")
-        lines.append("- do not enable auto execution until forward expectancy and PF stay positive")
+        lines.append("- keep execution state as configured: BTC demo auto guarded, XAU off unless explicitly changed")
     return "\n".join(lines)
 
 

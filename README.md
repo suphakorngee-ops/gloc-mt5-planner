@@ -98,17 +98,19 @@ These numbers are forward-test data and can change as more signals are collected
 Use `Terminal > Run Task...`.
 
 ```text
-01 Gloc BTC Live              run BTC planner and BTC demo executor
-02 Gloc XAU Live Weekdays     run XAU planner only when gold market is open
-03 Gloc Dashboard Live        live dashboard server
-04 Gloc Safe Automation       report, daily, state, backup, Discord digest
-05 Gloc Report All            forward report
-06 Gloc Daily Summary All     daily summary
-07 Gloc Execution Status      confirm BTC/XAU execution state
-08 Gloc Execution Dry Run     validate latest BTC signal without order
-10 Gloc Execution Manage      run BTC order manager once
-11 Gloc Resend Latest Signal  resend latest Discord signal
-18 Gloc Discord Bot Run       run Discord Q&A bot when token is configured
+LIVE 01 / BTC Demo Auto              run BTC planner and BTC demo executor
+LIVE 02 / XAU Weekdays               run XAU planner only when gold market is open
+EXEC 01 / Status All                 confirm BTC/XAU execution state
+EXEC 02 / BTC Manage Position        run BTC order manager once
+EXEC 03 / BTC Dry Run                validate latest BTC signal without order
+EXEC 04 / Order Ledger All           sync and report actual MT5 orders
+REPORT 01 / Forward All              forward report
+REPORT 02 / Daily All                daily summary
+OPS 01 / Safe Automation             report, daily, state, backup, Discord digest
+DISCORD 01 / Resend Latest Signal    resend latest Discord signal
+DISCORD 02 / Bot Run                 run Discord Q&A bot when token is configured
+DASH 01 / Live View                  live dashboard server
+DASH 02 / Open Static                static dashboard file
 ```
 
 ## Run By PowerShell
@@ -118,6 +120,7 @@ powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action liv
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action execution
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-dry-run
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action execution-manage
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action order-report
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action report
 powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol all -Action safe-automation
 ```
@@ -145,10 +148,17 @@ Webhook route support:
 signals -> MT5_PLANNER_DISCORD_SIGNALS_WEBHOOK
 reports -> MT5_PLANNER_DISCORD_REPORTS_WEBHOOK
 ops     -> MT5_PLANNER_DISCORD_OPS_WEBHOOK
+chat    -> MT5_PLANNER_DISCORD_CHAT_WEBHOOK
 fallback -> MT5_PLANNER_DISCORD_WEBHOOK
 ```
 
 Secrets must stay in `DISCORD_WEBHOOK.local.ps1` or local environment variables. Do not commit them.
+
+Test a route:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File MT5_PLANNER.ps1 -Symbol btc -Action test-discord -DiscordRoute signals
+```
 
 ## Important Files
 

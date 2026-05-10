@@ -1,9 +1,15 @@
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timezone
 import json
+from pathlib import Path
 
 
-def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: str | None = None) -> str:
+def build_forward_report(
+    rows: list[dict],
+    target_signals: int = 50,
+    start_at: str | None = None,
+    config: dict | None = None,
+) -> str:
     forward_rows = [row for row in rows if (row.get("source") or "forward") == "forward"]
     if start_at:
         start = parse_time(start_at)
@@ -41,7 +47,9 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
     remaining_50 = max(50 - total, 0)
     remaining_100 = max(100 - total, 0)
 
-    lines.append(f"signals: {total}")
+    lines.append("STRATEGY / PAPER IDEAS")
+    lines.append("-" * 72)
+    lines.append(f"raw signals: {total}")
     if len(idea_rows) != total:
         idea_wins = [row for row in idea_rows if row.get("status") in ("tp", "tp1")]
         idea_losses = [row for row in idea_rows if row.get("status") == "sl"]
@@ -50,7 +58,7 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
         idea_closed = len(idea_wins) + len(idea_losses)
         idea_wr = len(idea_wins) / idea_closed * 100 if idea_closed else 0
         lines.append(
-            f"trade ideas: {len(idea_rows)} grouped from {total} raw signals | "
+            f"grouped trade ideas: {len(idea_rows)} from {total} raw signals | "
             f"wins {len(idea_wins)} | losses {len(idea_losses)} | open {len(idea_open)} | "
             f"timeout {len(idea_timeout)} | closed WR {idea_wr:.1f}%"
         )
@@ -63,6 +71,9 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
     lines.append(f"avg win: {avg_win_r:.2f}R | avg loss: -{avg_loss_r:.2f}R | avg $risk: {avg_risk:.2f}")
     lines.append(f"progress: {total}/50 ({remaining_50} left) | {total}/100 ({remaining_100} left)")
     lines.append(f"decision: {decision_text(total, expectancy, profit_factor, closed)}")
+    if config:
+        lines.append("")
+        lines.extend(actual_execution_section(config, start_at))
     lines.append("")
     lines.extend(group_section(forward_rows, "session"))
     lines.append("")
@@ -70,6 +81,109 @@ def build_forward_report(rows: list[dict], target_signals: int = 50, start_at: s
     lines.append("")
     lines.extend(recent_section(idea_rows))
     return "\n".join(lines)
+
+
+def actual_execution_section(config: dict, start_at: str | None = None) -> list[str]:
+    symbol = str(config.get("symbol") or "-")
+    execution = config.get("execution", {})
+    max_open = execution.get("max_open_trades", 1)
+    sent, blocked = execution_log_counts(symbol, start_at)
+    mt5_summary = mt5_order_summary(config, start_at)
+
+    lines = ["VLOC / ACTUAL MT5 ORDERS", "-" * 72]
+    lines.append(
+        f"execution: {execution_state(execution)} | max_open_trades {max_open} | "
+        "paper ideas do not all become orders"
+    )
+    lines.append(f"execution log: sent {sent} | blocked/rejected {blocked}")
+    if mt5_summary.get("available"):
+        lines.append(
+            f"MT5 today/history: closed deals {mt5_summary['closed_deals']} | "
+            f"closed P/L ${mt5_summary['closed_profit']:.2f} | open positions {mt5_summary['open_positions']}"
+        )
+    else:
+        lines.append(f"MT5 today/history: unavailable ({mt5_summary.get('reason', '-')})")
+    return lines
+
+
+def execution_state(execution: dict) -> str:
+    if not execution.get("enabled", False):
+        return "OFF"
+    if execution.get("dry_run", True):
+        return "DRY RUN"
+    if execution.get("mode") == "demo_auto" and execution.get("demo_only", True):
+        return "DEMO AUTO ON"
+    return "ENABLED"
+
+
+def execution_log_counts(symbol: str, start_at: str | None = None) -> tuple[int, int]:
+    path = Path("reports/execution.log")
+    if not path.exists():
+        return 0, 0
+    start = parse_time(start_at) if start_at else None
+    sent = 0
+    blocked = 0
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        try:
+            row = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if str(row.get("symbol") or "") != symbol:
+            continue
+        created = parse_time(str(row.get("time") or ""))
+        if start and created and created < start:
+            continue
+        if row.get("status") == "sent":
+            sent += 1
+        elif row.get("status") in ("reject", "error", "dry_run"):
+            blocked += 1
+    return sent, blocked
+
+
+def mt5_order_summary(config: dict, start_at: str | None = None) -> dict:
+    try:
+        from .mt5_runtime import initialize_mt5
+    except Exception as exc:
+        return {"available": False, "reason": str(exc)}
+    try:
+        mt5 = initialize_mt5(config)
+        start = parse_time(start_at) if start_at else None
+        if start is None:
+            start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
+        end = datetime.now(timezone.utc)
+        symbol = str(config.get("symbol") or "")
+        magic = int(config.get("execution", {}).get("magic", 0) or 0)
+        deals = mt5.history_deals_get(start, end) or []
+        matched_deals = [
+            deal for deal in deals
+            if getattr(deal, "symbol", "") == symbol
+            and (not magic or int(getattr(deal, "magic", 0) or 0) == magic)
+        ]
+        closed_deals = [deal for deal in matched_deals if int(getattr(deal, "entry", 0) or 0) == 1]
+        closed_profit = sum(
+            float(getattr(deal, "profit", 0) or 0)
+            + float(getattr(deal, "swap", 0) or 0)
+            + float(getattr(deal, "commission", 0) or 0)
+            for deal in closed_deals
+        )
+        positions = mt5.positions_get(symbol=symbol) or []
+        open_positions = len([
+            position for position in positions
+            if not magic or int(getattr(position, "magic", 0) or 0) == magic
+        ])
+        mt5.shutdown()
+        return {
+            "available": True,
+            "closed_deals": len(closed_deals),
+            "closed_profit": closed_profit,
+            "open_positions": open_positions,
+        }
+    except Exception as exc:
+        try:
+            mt5.shutdown()
+        except Exception:
+            pass
+        return {"available": False, "reason": str(exc)}
 
 
 def group_trade_ideas(rows: list[dict], window_seconds: int = 900) -> list[dict]:

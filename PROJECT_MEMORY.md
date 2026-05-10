@@ -376,9 +376,9 @@ Then rerun:
 ## Current Non-Logic Utilities
 
 - VSCode task picker simplified:
-  - visible tasks are now `01 Gloc BTC Live` through `08 Gloc Dashboard Open`
+  - visible tasks are grouped by prefix: `LIVE`, `EXEC`, `REPORT`, `OPS`, `DISCORD`, `DASH`, `AGENT`, `SCHED`
   - helper tasks remain in `.vscode/tasks.json` but are hidden
-  - XAU task is named `02 Gloc XAU Live Weekdays` because gold is normally closed on Saturday/Sunday
+  - XAU task is named `LIVE 02 / XAU Weekdays` because gold is normally closed on Saturday/Sunday
 - Old root `.bat` launchers moved to `scripts/legacy_launchers/`; keep `START_HERE.bat` and `MT5_PLANNER.ps1` as main entrypoints.
 
 - New signal alert:
@@ -396,7 +396,14 @@ Then rerun:
   - `05 MAIN Dashboard Open` builds and opens it
 - Auto execution skeleton:
   - `execution-status`
-  - execution remains OFF with `execution.enabled = false`
+  - BTC later graduated to demo-only Vloc execution; XAU remains OFF
+- Actual MT5 order ledger:
+  - `mt5_planner/order_ledger.py`
+  - commands `order-sync` and `order-report`
+  - PowerShell actions `order-sync` and `order-report`
+  - VSCode task `EXEC 04 / Order Ledger All`
+  - writes local SQLite files such as `orders_btcusdm_current.sqlite`
+  - separates actual MT5 order P/L from paper/forward signal journal
 
 ## Manual Journal / Backup Utilities
 
@@ -443,7 +450,7 @@ Then rerun:
   - `MT5_PLANNER.ps1 -Symbol all -Action safe-automation`
   - VSCode task `11 MAIN Safe Automation + Discord Digest`
   - writes forward/daily reports, `PROJECT_STATE.md`, backup, and Discord digest
-  - does not send orders; auto execution remains OFF
+  - does not send orders itself; it only reports, saves state, backs up, and can send a Discord digest
 - Forward duplicate control added:
   - new signals get an `idea_key`
   - repeated same trade idea inside the current valid window is not saved again
@@ -457,11 +464,11 @@ Then rerun:
 - Alert follow-up added:
   - new saved signals append to `reports/signal_inbox.txt`
   - command `resend-latest`
-  - VSCode task `09 Gloc Resend Latest Signal`
+  - VSCode task `DISCORD 01 / Resend Latest Signal`
   - use this to resend `reports/latest_signal.txt` to Discord if the user missed it
   - Discord messages are compact and icon-based: header, entry/SL/TP, RR/lot/risk/quality, setup
-  - Discord route support added: `signals`, `reports`, `ops`
-  - env vars: `MT5_PLANNER_DISCORD_SIGNALS_WEBHOOK`, `MT5_PLANNER_DISCORD_REPORTS_WEBHOOK`, `MT5_PLANNER_DISCORD_OPS_WEBHOOK`
+  - Discord route support added: `signals`, `reports`, `ops`, `chat`
+  - env vars: `MT5_PLANNER_DISCORD_SIGNALS_WEBHOOK`, `MT5_PLANNER_DISCORD_REPORTS_WEBHOOK`, `MT5_PLANNER_DISCORD_OPS_WEBHOOK`, `MT5_PLANNER_DISCORD_CHAT_WEBHOOK`
   - docs: `docs/DISCORD_CHANNEL_SETUP.md`
 - Agent architecture doc added:
   - `AGENT_ARCHITECTURE.md`
@@ -508,7 +515,7 @@ Important:
   - added `docs/OPENCLAW_NOTES.md`; OpenClaw is optional and not needed for current CSV/journal workflow
   - added Windows Task Scheduler scripts under `scripts/scheduler/`
   - scheduler tasks: `Gloc Rloc Loop`, `Gloc Oloc Loop`
-  - VSCode tasks: `10 Gloc Scheduler Status`, `11 Gloc Install Scheduler`, `12 Gloc Uninstall Scheduler`
+  - VSCode tasks: `SCHED 01 / Windows Status`, `SCHED 02 / Install Windows Scheduler`, `SCHED 03 / Uninstall Windows Scheduler`
   - Task Scheduler registration was blocked by Windows permissions in this session
   - added Startup folder fallback scripts: `install_startup_agents.ps1`, `status_startup_agents.ps1`, `uninstall_startup_agents.ps1`
 
